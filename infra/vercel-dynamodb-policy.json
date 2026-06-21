@@ -1,0 +1,17 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ZeroReceiptReadOnly",
+      "Effect": "Allow",
+      "Action": ["dynamodb:Query", "dynamodb:GetItem"],
+      "Resource": "arn:aws:dynamodb:REGION:ACCOUNT_ID:table/zero-events"
+    },
+    {
+      "Sid": "ZeroAgentRunWriter",
+      "Effect": "Allow",
+      "Action": ["dynamodb:BatchWriteItem"],
+      "Resource": "arn:aws:dynamodb:REGION:ACCOUNT_ID:table/zero-events"
+    }
+  ]
+}

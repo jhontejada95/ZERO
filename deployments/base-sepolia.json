@@ -1,0 +1,31 @@
+{
+  "project": "ZERO",
+  "network": "base-sepolia",
+  "chainId": 84532,
+  "deployedAt": "2026-06-20",
+  "deployer": "0x12fd1ED6655B7FC6E6d24aa103678C33D2B5BCEd",
+  "treasury": "0x0834dE5d9bF523db274C77874ad3B1C4ec0e614C",
+  "verifier": "0x6bFAcC1f21E06843A189b540520614F9abfccd94",
+  "contracts": {
+    "zeroTestToken": "0xe5546454f7Be4796d2CF65d5F0399501Dca21aab",
+    "zeroSettlementEscrow": "0x7f6510C4cD6Edc5F59F49ccD5792258e13Bad3D6",
+    "eas": "0x4200000000000000000000000000000000000021",
+    "schemaRegistry": "0x4200000000000000000000000000000000000020"
+  },
+  "schemaUID": "0x1097b2cc70edfec6b92d7affc0b5a72cab554c0f45345a150218858d01417734",
+  "token": {
+    "name": "ZERO Test Token",
+    "symbol": "ZERO",
+    "decimals": 6,
+    "initialSupply": "100000000000000",
+    "initialSupplyDisplay": "100,000,000 ZERO",
+    "realWorldValue": false
+  },
+  "transactions": {
+    "faucet": "0xf91bd586fdd152d7c903dae9836b97f2a637bb6a2a50fae46427432acc61fdae",
+    "tokenDeployment": "0x2bb4756790d857a1d1da3df8688eeb577d72f37d1ca058d20b45b78acf68dd9c",
+    "escrowDeployment": "0xed472fe4e2368537224160116b4ebe1ed2fa367661d720143964dc8b5fcee004",
+    "verifierRoleGrant": "0x51da2ac484c2de5476b3ccdc50eb9bf84378ea99c2656a8206757eba43bbb208"
+  },
+  "explorer": "https://sepolia.basescan.org"
+}
