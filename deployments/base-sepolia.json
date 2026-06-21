@@ -27,5 +27,24 @@
     "escrowDeployment": "0xed472fe4e2368537224160116b4ebe1ed2fa367661d720143964dc8b5fcee004",
     "verifierRoleGrant": "0x51da2ac484c2de5476b3ccdc50eb9bf84378ea99c2656a8206757eba43bbb208"
   },
+  "settlement": {
+    "settledAt": "2026-06-21",
+    "status": "SETTLED",
+    "approvalMode": "SIMULATED",
+    "programId": "0x492df59c1297d0da4351a017a982a08e0c26419ceddea3defddc61fdcb891ed4",
+    "receiptHash": "0x2283de8e774b989c84268bce1aa3a4938d42468d309e3daf0dd0617173ea8598",
+    "attestationUID": "0x586c4e3b19e204ce09eace285a1881bd318d9cf816b297b0989981510653aa72",
+    "beneficiary": "0xe5C43B4AC4147f8Aab8A161E4259252618d7102b",
+    "amount": "2400000000000",
+    "amountDisplay": "2,400,000 ZERO",
+    "transactions": {
+      "createProgram": "0x7874963d47905c9e7b5a6068648c8c6505c7443ce90350e0a5ae5f6c850824f9",
+      "treasuryGas": "0xa640d2fcd4e218a634f6333f934957fa527a27b9b4a091c168e1ddbce94c9daf",
+      "verifierGas": "0x1237e68752be06fc44e2b15462368fe04ed2dc924511de3a433c72144f84d92e",
+      "funding": "0x8a8d2dadd6f681418a54da97518bfa12c9a86a34007c05626b74a9e57b6f3180",
+      "attestation": "0x8cefd61be25cd203d08fdfaa1c4a4f9adee10f3263e3b06ca84333504c642535",
+      "settlement": "0x346becdf17c0025f39acbf5353a406d26dcb2205d70d23e7683949e5b54b7f26"
+    }
+  },
   "explorer": "https://sepolia.basescan.org"
 }

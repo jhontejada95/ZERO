@@ -38,8 +38,9 @@ ZERO now includes a settlement layer deployed on Base Sepolia:
 - Automatic CDP EVM/smart-wallet creation when Coinbase credentials are configured.
 - An OpenAI-compatible model adapter for DeepSeek or Groq.
 - A clearly labelled local x402 simulation, ready to be replaced by a live facilitator.
+- A completed Base Sepolia settlement of `2,400,000 ZERO`: [EAS attestation](https://sepolia.basescan.org/tx/0x8cefd61be25cd203d08fdfaa1c4a4f9adee10f3263e3b06ca84333504c642535) and [escrow settlement](https://sepolia.basescan.org/tx/0x346becdf17c0025f39acbf5353a406d26dcb2205d70d23e7683949e5b54b7f26).
 
-Open `Trace settlement` to execute the agent run. Production uses five real CDP wallet addresses, while the current `2,400,000 ZERO` orchestration trace remains simulated and does not yet broadcast the final escrow settlement.
+Open `Trace settlement` to execute the agent run. Production uses five real CDP wallet addresses. The reference payment has been broadcast and independently verified on-chain; the UI trace and human-approval step remain simulated until they are connected to the persisted settlement record and an explicit signer flow.
 
 ```bash
 npm test

@@ -1,4 +1,4 @@
-# ZERO checkpoint — 2026-06-20
+# ZERO checkpoint — 2026-06-21
 
 This document is the restart point for the next development session.
 
@@ -14,7 +14,7 @@ ZERO makes prevention visible, auditable, and financeable. It issues a Preventio
 - Vercel-to-AWS OIDC role: `zero-vercel-production`; no AWS static keys in Vercel.
 - Agent runs persist one summary plus nine immutable milestones in DynamoDB.
 - Coinbase CDP creates and reuses real EOA and smart-wallet addresses for program, treasury, procurement, verifier, and beneficiary agents.
-- The deterministic agent pipeline completes in CDP mode; x402 purchasing, attestation issuance, and settlement hashes are still simulated at the orchestration layer.
+- The deterministic agent pipeline completes in CDP mode. A reference EAS attestation and escrow settlement are real on Base Sepolia; the UI trace, x402 purchasing, and human approval are still simulated at the orchestration layer.
 - Fourteen automated tests pass, including escrow authorization, altered-receipt rejection, revoked-attestation rejection, double-settlement prevention, counterfactual determinism, and DynamoDB receipt reconstruction.
 
 ## Base Sepolia deployment
@@ -36,26 +36,36 @@ On-chain verification completed successfully:
 - Escrow references the deployed token, native Base EAS, and the correct schema UID.
 - Verifier EOA holds `VERIFIER_ROLE`.
 
+## Verified reference settlement
+
+- Status: `SETTLED`; escrow program status `3`.
+- Program ID: `0x492df59c1297d0da4351a017a982a08e0c26419ceddea3defddc61fdcb891ed4`.
+- Receipt hash: `0x2283de8e774b989c84268bce1aa3a4938d42468d309e3daf0dd0617173ea8598`.
+- EAS attestation UID: `0x586c4e3b19e204ce09eace285a1881bd318d9cf816b297b0989981510653aa72`.
+- Beneficiary: `0xe5C43B4AC4147f8Aab8A161E4259252618d7102b`.
+- Payment: `2,400,000 ZERO`; beneficiary balance matches, treasury retains `97,600,000 ZERO`, and escrow balance is zero.
+- [Funding transaction](https://sepolia.basescan.org/tx/0x8a8d2dadd6f681418a54da97518bfa12c9a86a34007c05626b74a9e57b6f3180), [EAS attestation](https://sepolia.basescan.org/tx/0x8cefd61be25cd203d08fdfaa1c4a4f9adee10f3263e3b06ca84333504c642535), and [settlement](https://sepolia.basescan.org/tx/0x346becdf17c0025f39acbf5353a406d26dcb2205d70d23e7683949e5b54b7f26).
+- Independent RPC reads confirmed the program fields, schema, attester, recipient, encoded amount/token, consumed attestation, and all three token balances.
+- Approval mode was `SIMULATED`; this transaction proves the wallet/EAS/escrow rail, not yet a human authorization workflow.
+
 ## Security posture
 
 - Coinbase credentials and Wallet Secret exist only as Vercel Sensitive environment variables.
 - The contract deployer key was exported only into an ephemeral protected server function because CDP contract-creation signing was unavailable through `sendTransaction`; it was never printed or persisted.
 - The temporary deploy endpoint and `ZERO_DEPLOY_KEY` are removed at this checkpoint.
+- The temporary settlement endpoint and `ZERO_SETTLEMENT_KEY` were also removed after execution; production returns `404` for that route.
 - `.env*`, `.vercel`, logs, dependencies, build output, and local caches are excluded from Git.
 - The ZERO token is a testnet demonstration asset, not money, a stablecoin, or a claim on fiat.
 
 ## Next priorities
 
-1. Replace orchestration-layer settlement hashes with real Base Sepolia transactions.
-2. Implement treasury smart-account approval and fund the escrow with `2,400,000 ZERO`.
-3. Create a real EAS attestation from the verifier EOA and execute `settle` end to end.
-4. Add explicit human approval/signature before attestation and settlement.
-5. Replace the local x402 simulator with a live testnet facilitator and paid evidence endpoint.
-6. Connect DeepSeek or Groq for live verification narratives; fallback remains deterministic.
-7. Surface contract addresses, explorer links, wallet roles, and transaction status in the UI.
-8. Verify and publish Solidity source code on BaseScan.
-9. Add policy limits, rate limiting, replay protection at the API layer, and operational monitoring.
-10. Produce the Devpost submission, architecture graphic, demo script, and judge-facing evidence.
+1. Add explicit human approval/signature before attestation and settlement.
+2. Connect the UI agent trace to the persisted real settlement and explorer links.
+3. Replace the local x402 simulator with a live testnet facilitator and paid evidence endpoint.
+4. Connect DeepSeek or Groq for live verification narratives; fallback remains deterministic.
+5. Verify and publish Solidity source code on BaseScan.
+6. Add policy limits, rate limiting, replay protection at the API layer, and operational monitoring.
+7. Produce the Devpost submission, architecture graphic, demo script, and judge-facing evidence.
 
 ## Restart commands
 
