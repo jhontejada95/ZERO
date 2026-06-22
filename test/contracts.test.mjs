@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import ganache from "ganache";
-import { BrowserProvider, ContractFactory, AbiCoder, id, parseUnits } from "ethers";
+import { BrowserProvider, ContractFactory, AbiCoder, Wallet, id, parseUnits } from "ethers";
 import { compileContracts } from "../scripts/compile-contracts.mjs";
 
 const compiled = compileContracts();
@@ -20,12 +20,14 @@ async function deploy(factoryArtifact, signer, args = []) {
 async function fixture() {
   const rpc = ganache.provider({ logging: { quiet: true }, chain: { chainId: 31337 }, wallet: { totalAccounts: 6 } });
   const provider = new BrowserProvider(rpc);
-  const [admin, treasury, beneficiary, verifier, settlement] = await Promise.all([0, 1, 2, 3, 4].map((index) => provider.getSigner(index)));
+  const [admin, treasury, beneficiary, verifier, settlement, approverRpc] = await Promise.all([0, 1, 2, 3, 4, 5].map((index) => provider.getSigner(index)));
   const adminAddress = await admin.getAddress();
   const treasuryAddress = await treasury.getAddress();
   const beneficiaryAddress = await beneficiary.getAddress();
   const verifierAddress = await verifier.getAddress();
   const settlementAddress = await settlement.getAddress();
+  const approverAddress = await approverRpc.getAddress();
+  const approver = new Wallet(rpc.getInitialAccounts()[approverAddress.toLowerCase()].secretKey, provider);
   const schemaUID = id("ZERO_PREVENTION_RECEIPT_V1");
   const supply = parseUnits("100000000", 6);
   const amount = parseUnits("2400000", 6);
@@ -34,6 +36,7 @@ async function fixture() {
   const token = await deploy(artifact("contracts/ZEROTestToken.sol", "ZEROTestToken"), admin, [adminAddress, treasuryAddress, supply]);
   const escrow = await deploy(artifact("contracts/ZEROSettlementEscrow.sol", "ZEROSettlementEscrow"), admin, [
     adminAddress,
+    approverAddress,
     await token.getAddress(),
     await eas.getAddress(),
     schemaUID,
@@ -42,10 +45,40 @@ async function fixture() {
   await (await escrow.grantRole(await escrow.SETTLEMENT_ROLE(), settlementAddress)).wait();
 
   return {
-    provider, admin, treasury, beneficiary, verifier, settlement,
+    provider, admin, treasury, beneficiary, verifier, settlement, approver,
     eas, token, escrow, schemaUID, supply, amount,
-    adminAddress, treasuryAddress, beneficiaryAddress, verifierAddress, settlementAddress,
+    adminAddress, treasuryAddress, beneficiaryAddress, verifierAddress, settlementAddress, approverAddress,
   };
+}
+
+async function signApproval(context, program, uid, overrides = {}) {
+  const nonce = overrides.nonce ?? await context.escrow.approvalNonces(context.approverAddress);
+  const latestBlock = await context.provider.getBlock("latest");
+  const deadline = overrides.deadline ?? BigInt(latestBlock.timestamp + 3600);
+  const network = await context.provider.getNetwork();
+  const value = {
+    programId: overrides.programId ?? program.programId,
+    attestationUID: overrides.attestationUID ?? uid,
+    beneficiary: overrides.beneficiary ?? context.beneficiaryAddress,
+    amount: overrides.amount ?? context.amount,
+    receiptHash: overrides.receiptHash ?? program.receiptHash,
+    nonce,
+    deadline,
+  };
+  const signature = await context.approver.signTypedData(
+    { name: "ZERO Settlement Escrow", version: "2", chainId: network.chainId, verifyingContract: await context.escrow.getAddress() },
+    { SettlementApproval: [
+      { name: "programId", type: "bytes32" },
+      { name: "attestationUID", type: "bytes32" },
+      { name: "beneficiary", type: "address" },
+      { name: "amount", type: "uint256" },
+      { name: "receiptHash", type: "bytes32" },
+      { name: "nonce", type: "uint256" },
+      { name: "deadline", type: "uint256" },
+    ] },
+    value,
+  );
+  return { nonce, deadline, signature };
 }
 
 async function createFundedProgram(context, suffix = "demo") {
@@ -100,9 +133,11 @@ test("ZERO settles 2.4M test tokens only after an authorized attestation", async
   assert.equal(storedAttestation.attester, context.verifierAddress);
   assert.equal(await context.escrow.hasRole(await context.escrow.VERIFIER_ROLE(), context.verifierAddress), true);
   assert.equal(await context.escrow.hasRole(await context.escrow.SETTLEMENT_ROLE(), context.settlementAddress), true);
+  assert.equal(await context.escrow.hasRole(await context.escrow.APPROVER_ROLE(), context.approverAddress), true);
   assert.equal(await context.token.balanceOf(await context.escrow.getAddress()), context.amount);
 
-  await (await context.escrow.connect(context.settlement).settle(program.programId, uid)).wait();
+  const approval = await signApproval(context, program, uid);
+  await (await context.escrow.connect(context.settlement).settle(program.programId, uid, approval.nonce, approval.deadline, approval.signature)).wait();
 
   assert.equal(await context.token.balanceOf(context.beneficiaryAddress), context.amount);
   assert.equal((await context.escrow.getProgram(program.programId)).status, 3n);
@@ -115,7 +150,7 @@ test("ZERO rejects a receipt hash changed after funding", async () => {
   const uid = await issueAttestation(context, { ...program, suffix: "tampered", dataReceiptHash: id("ALTERED") });
 
   await assert.rejects(
-    context.escrow.connect(context.settlement).settle(program.programId, uid),
+    context.escrow.connect(context.settlement).settle(program.programId, uid, 0, 0, "0x"),
     /wrong receipt|missing revert data/,
   );
 });
@@ -126,7 +161,7 @@ test("ZERO rejects attestations from an unauthorized wallet", async () => {
   const uid = await issueAttestation(context, { ...program, suffix: "unauthorized", attester: context.adminAddress });
 
   await assert.rejects(
-    context.escrow.connect(context.settlement).settle(program.programId, uid),
+    context.escrow.connect(context.settlement).settle(program.programId, uid, 0, 0, "0x"),
     /unauthorized verifier|missing revert data/,
   );
 });
@@ -137,15 +172,40 @@ test("ZERO rejects revoked attestations and cannot pay twice", async () => {
   const revokedUID = await issueAttestation(context, { ...first, suffix: "revoked" });
   await (await context.eas.revoke(revokedUID)).wait();
   await assert.rejects(
-    context.escrow.connect(context.settlement).settle(first.programId, revokedUID),
+    context.escrow.connect(context.settlement).settle(first.programId, revokedUID, 0, 0, "0x"),
     /attestation revoked|missing revert data/,
   );
 
   const second = await createFundedProgram(context, "once");
   const validUID = await issueAttestation(context, { ...second, suffix: "once" });
-  await (await context.escrow.connect(context.settlement).settle(second.programId, validUID)).wait();
+  const approval = await signApproval(context, second, validUID);
+  await (await context.escrow.connect(context.settlement).settle(second.programId, validUID, approval.nonce, approval.deadline, approval.signature)).wait();
   await assert.rejects(
-    context.escrow.connect(context.settlement).settle(second.programId, validUID),
+    context.escrow.connect(context.settlement).settle(second.programId, validUID, approval.nonce, approval.deadline, approval.signature),
     /not funded|missing revert data/,
+  );
+});
+
+test("ZERO rejects an expired human approval", async () => {
+  const context = await fixture();
+  const program = await createFundedProgram(context, "expired-approval");
+  const uid = await issueAttestation(context, { ...program, suffix: "expired-approval" });
+  const approval = await signApproval(context, program, uid, { deadline: 1n });
+
+  await assert.rejects(
+    context.escrow.connect(context.settlement).settle(program.programId, uid, approval.nonce, approval.deadline, approval.signature),
+    /approval expired|missing revert data/,
+  );
+});
+
+test("ZERO rejects an approval altered after the human signs it", async () => {
+  const context = await fixture();
+  const program = await createFundedProgram(context, "altered-approval");
+  const uid = await issueAttestation(context, { ...program, suffix: "altered-approval" });
+  const approval = await signApproval(context, program, uid, { amount: context.amount - 1n });
+
+  await assert.rejects(
+    context.escrow.connect(context.settlement).settle(program.programId, uid, approval.nonce, approval.deadline, approval.signature),
+    /unauthorized approver|missing revert data/,
   );
 });

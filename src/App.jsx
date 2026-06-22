@@ -90,6 +90,60 @@ function shorten(value) {
   return value ? `${value.slice(0, 8)}…${value.slice(-6)}` : "—";
 }
 
+function HumanApprovalPanel() {
+  const [challenge, setChallenge] = useState(null);
+  const [status, setStatus] = useState("loading");
+  const [error, setError] = useState("");
+  const [transaction, setTransaction] = useState("");
+
+  useEffect(() => {
+    fetch("/api/human-approval", { headers: { Accept: "application/json" } })
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error("Approval API unavailable")))
+      .then((data) => { setChallenge(data); setStatus(data.status === "SETTLED" ? "settled" : "ready"); })
+      .catch((reason) => { setError(reason.message); setStatus("failed"); });
+  }, []);
+
+  async function approve() {
+    setError("");
+    setStatus("signing");
+    try {
+      if (!window.ethereum) throw new Error("MetaMask is required to approve this settlement.");
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      if (accounts[0]?.toLowerCase() !== challenge.approver.toLowerCase()) throw new Error(`Connect the authorized wallet ${shorten(challenge.approver)}.`);
+      try {
+        await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: "0x14a34" }] });
+      } catch (switchError) {
+        if (switchError.code !== 4902) throw switchError;
+        await window.ethereum.request({ method: "wallet_addEthereumChain", params: [{ chainId: "0x14a34", chainName: "Base Sepolia", nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 }, rpcUrls: ["https://sepolia.base.org"], blockExplorerUrls: ["https://sepolia.basescan.org"] }] });
+      }
+      const { BrowserProvider } = await import("ethers");
+      const signer = await new BrowserProvider(window.ethereum).getSigner();
+      const signature = await signer.signTypedData(challenge.domain, challenge.types, challenge.value);
+      setStatus("settling");
+      const response = await fetch("/api/human-approval", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ signature, deadline: challenge.value.deadline }) });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Settlement failed");
+      setTransaction(result.transactionHash || "");
+      setStatus("settled");
+    } catch (reason) {
+      setError(reason.shortMessage || reason.message || "Approval cancelled");
+      setStatus("ready");
+    }
+  }
+
+  return (
+    <section className="approval-panel" aria-label="Human settlement approval">
+      <div><span>HUMAN AUTHORIZATION</span><strong>{challenge?.amountDisplay || "Loading approval…"}</strong><p>{challenge?.rationale || "EIP-712 approval bound to the exact outcome."}</p></div>
+      {status === "settled" ? (
+        transaction ? <a href={`https://sepolia.basescan.org/tx/${transaction}`} target="_blank" rel="noreferrer">Approved on Base Sepolia <ArrowRight size={16} /></a> : <em>Already approved and settled</em>
+      ) : (
+        <button onClick={approve} disabled={status !== "ready"}>{status === "signing" ? "Confirm in MetaMask" : status === "settling" ? "Settling on-chain" : "Approve release"}</button>
+      )}
+      {error && <small>{error}</small>}
+    </section>
+  );
+}
+
 function AgentRunModal({ onClose }) {
   const [status, setStatus] = useState("idle");
   const [run, setRun] = useState(null);
@@ -113,6 +167,7 @@ function AgentRunModal({ onClose }) {
         <p className="eyebrow">AUTONOMOUS PREVENTION RUN</p>
         <h2 id="agent-modal-title">Watch every agent earn the right to settle.</h2>
         <p className="modal-intro">Wallet creation, paid data, evidence, verification, attestation and settlement are exposed as one auditable chain.</p>
+        <HumanApprovalPanel />
 
         {status === "idle" && (
           <div className="agent-launch">

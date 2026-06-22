@@ -25,6 +25,7 @@ export function compileContracts() {
     sources,
     settings: {
       evmVersion: "shanghai",
+      viaIR: true,
       optimizer: { enabled: true, runs: 200 },
       outputSelection: { "*": { "*": ["abi", "evm.bytecode.object"] } },
     },

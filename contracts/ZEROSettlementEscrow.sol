@@ -15,6 +15,7 @@ contract ZEROSettlementEscrow is AccessControl, Pausable, ReentrancyGuard {
     bytes32 public constant PROGRAM_MANAGER_ROLE = keccak256("PROGRAM_MANAGER_ROLE");
     bytes32 public constant SETTLEMENT_ROLE = keccak256("SETTLEMENT_ROLE");
     bytes32 public constant VERIFIER_ROLE = keccak256("VERIFIER_ROLE");
+    bytes32 public constant APPROVER_ROLE = keccak256("APPROVER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
     enum ProgramStatus { None, Created, Funded, Settled, Cancelled }
@@ -34,14 +35,28 @@ contract ZEROSettlementEscrow is AccessControl, Pausable, ReentrancyGuard {
     bytes32 public immutable preventionSchemaUID;
     mapping(bytes32 => Program) private programs;
     mapping(bytes32 => bool) public consumedAttestations;
+    mapping(bytes32 => bool) public consumedApprovals;
+    mapping(address => uint256) public approvalNonces;
+
+    bytes32 public constant APPROVAL_TYPEHASH = keccak256(
+        "SettlementApproval(bytes32 programId,bytes32 attestationUID,address beneficiary,uint256 amount,bytes32 receiptHash,uint256 nonce,uint256 deadline)"
+    );
+    bytes32 private constant DOMAIN_TYPEHASH = keccak256(
+        "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
+    );
+    bytes32 private constant NAME_HASH = keccak256("ZERO Settlement Escrow");
+    bytes32 private constant VERSION_HASH = keccak256("2");
+    uint256 private constant SECP256K1_HALF_ORDER =
+        0x7fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a0;
 
     event ProgramCreated(bytes32 indexed programId, address indexed beneficiary, uint256 targetAmount, bytes32 receiptHash);
     event ProgramFunded(bytes32 indexed programId, address indexed funder, uint256 amount, uint256 fundedAmount);
     event ProgramSettled(bytes32 indexed programId, address indexed beneficiary, uint256 amount, bytes32 indexed attestationUID);
+    event SettlementApproved(bytes32 indexed programId, address indexed approver, bytes32 indexed approvalDigest, uint256 nonce);
     event ProgramCancelled(bytes32 indexed programId, address indexed refundAddress, uint256 refundedAmount);
 
-    constructor(address admin, IERC20 settlementToken, IEAS easContract, bytes32 schemaUID) {
-        require(admin != address(0) && address(settlementToken) != address(0) && address(easContract) != address(0), "ZERO: zero address");
+    constructor(address admin, address initialApprover, IERC20 settlementToken, IEAS easContract, bytes32 schemaUID) {
+        require(admin != address(0) && initialApprover != address(0) && address(settlementToken) != address(0) && address(easContract) != address(0), "ZERO: zero address");
         token = settlementToken;
         eas = easContract;
         preventionSchemaUID = schemaUID;
@@ -49,6 +64,7 @@ contract ZEROSettlementEscrow is AccessControl, Pausable, ReentrancyGuard {
         _grantRole(PROGRAM_MANAGER_ROLE, admin);
         _grantRole(SETTLEMENT_ROLE, admin);
         _grantRole(PAUSER_ROLE, admin);
+        _grantRole(APPROVER_ROLE, initialApprover);
     }
 
     function createProgram(
@@ -85,7 +101,13 @@ contract ZEROSettlementEscrow is AccessControl, Pausable, ReentrancyGuard {
         emit ProgramFunded(programId, msg.sender, amount, program.fundedAmount);
     }
 
-    function settle(bytes32 programId, bytes32 attestationUID)
+    function settle(
+        bytes32 programId,
+        bytes32 attestationUID,
+        uint256 nonce,
+        uint256 deadline,
+        bytes calldata approvalSignature
+    )
         external
         onlyRole(SETTLEMENT_ROLE)
         nonReentrant
@@ -108,11 +130,66 @@ contract ZEROSettlementEscrow is AccessControl, Pausable, ReentrancyGuard {
         require(receiptHash == program.receiptHash, "ZERO: wrong receipt");
         require(amount == program.targetAmount && settlementToken == address(token), "ZERO: wrong settlement");
 
+        (address approver, bytes32 approvalDigest) = _consumeApproval(
+            program, programId, attestationUID, nonce, deadline, approvalSignature
+        );
+
         consumedAttestations[attestationUID] = true;
         program.attestationUID = attestationUID;
         program.status = ProgramStatus.Settled;
+        emit SettlementApproved(programId, approver, approvalDigest, nonce);
         token.safeTransfer(program.beneficiary, program.targetAmount);
         emit ProgramSettled(programId, program.beneficiary, program.targetAmount, attestationUID);
+    }
+
+    function _consumeApproval(
+        Program storage program,
+        bytes32 programId,
+        bytes32 attestationUID,
+        uint256 nonce,
+        uint256 deadline,
+        bytes calldata approvalSignature
+    ) private returns (address approver, bytes32 approvalDigest) {
+        require(block.timestamp <= deadline, "ZERO: approval expired");
+        bytes32 approvalStructHash = keccak256(abi.encode(
+            APPROVAL_TYPEHASH,
+            programId,
+            attestationUID,
+            program.beneficiary,
+            program.targetAmount,
+            program.receiptHash,
+            nonce,
+            deadline
+        ));
+        bytes32 domainSeparator = keccak256(abi.encode(
+            DOMAIN_TYPEHASH,
+            NAME_HASH,
+            VERSION_HASH,
+            block.chainid,
+            address(this)
+        ));
+        approvalDigest = keccak256(abi.encodePacked("\x19\x01", domainSeparator, approvalStructHash));
+        require(!consumedApprovals[approvalDigest], "ZERO: approval consumed");
+        approver = _recover(approvalDigest, approvalSignature);
+        require(hasRole(APPROVER_ROLE, approver), "ZERO: unauthorized approver");
+        require(nonce == approvalNonces[approver], "ZERO: wrong approval nonce");
+        consumedApprovals[approvalDigest] = true;
+        approvalNonces[approver] = nonce + 1;
+    }
+
+    function _recover(bytes32 digest, bytes calldata signature) private pure returns (address signer) {
+        require(signature.length == 65, "ZERO: invalid signature");
+        bytes32 r;
+        bytes32 s;
+        uint8 v;
+        assembly {
+            r := calldataload(signature.offset)
+            s := calldataload(add(signature.offset, 32))
+            v := byte(0, calldataload(add(signature.offset, 64)))
+        }
+        require(uint256(s) <= SECP256K1_HALF_ORDER && (v == 27 || v == 28), "ZERO: invalid signature");
+        signer = ecrecover(digest, v, r, s);
+        require(signer != address(0), "ZERO: invalid signature");
     }
 
     function cancelProgram(bytes32 programId) external onlyRole(PROGRAM_MANAGER_ROLE) nonReentrant {

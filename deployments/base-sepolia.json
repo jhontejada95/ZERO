@@ -9,6 +9,7 @@
   "contracts": {
     "zeroTestToken": "0xe5546454f7Be4796d2CF65d5F0399501Dca21aab",
     "zeroSettlementEscrow": "0x7f6510C4cD6Edc5F59F49ccD5792258e13Bad3D6",
+    "zeroApprovalEscrow": "0x4E719831f1e81730499B5E7e8a1f4B8A6E865d2E",
     "eas": "0x4200000000000000000000000000000000000021",
     "schemaRegistry": "0x4200000000000000000000000000000000000020"
   },
@@ -25,7 +26,32 @@
     "faucet": "0xf91bd586fdd152d7c903dae9836b97f2a637bb6a2a50fae46427432acc61fdae",
     "tokenDeployment": "0x2bb4756790d857a1d1da3df8688eeb577d72f37d1ca058d20b45b78acf68dd9c",
     "escrowDeployment": "0xed472fe4e2368537224160116b4ebe1ed2fa367661d720143964dc8b5fcee004",
-    "verifierRoleGrant": "0x51da2ac484c2de5476b3ccdc50eb9bf84378ea99c2656a8206757eba43bbb208"
+    "verifierRoleGrant": "0x51da2ac484c2de5476b3ccdc50eb9bf84378ea99c2656a8206757eba43bbb208",
+    "approvalEscrowDeployment": "0xe7f0b6dc8613eabced2ab7a576e16771b073ed6e76bca08a64dc3a149e4cc66f",
+    "approvalProgramManagerGrant": "0x798c57dce121bb40baac34667bb205ff7a2e958d59ceff73e157a439d36733fd",
+    "approvalSettlementGrant": "0xaa9c1a27610a550bae9d7e564f9ebf9bc18d69cecb7762e73caaa3d448e366d5",
+    "approvalVerifierGrant": "0xc1cfd4ccb05d2b6cbc7e0c60704509297ddc89445d3f38fc20f9f980e0547bd5"
+  },
+  "humanApproval": {
+    "standard": "EIP-712",
+    "domain": "ZERO Settlement Escrow",
+    "version": "2",
+    "approver": "0x5d8B442bfe432C06328Afc2a4E4b9Bb609301bB5",
+    "replayProtection": "per-approver nonce plus consumed digest",
+    "status": "SETTLED",
+    "canary": {
+      "programId": "0x69a738a47a227698f90e62499963026105c5ece46419b200d80f8acf288df0f8",
+      "receiptHash": "0x89f75b051814ce66882cfbd33e9177505456da27e168036c4e7edebf0f872ed5",
+      "attestationUID": "0xe2f7a9b141c6e36334b03db9e1d0e9588c610d11540e189fba3004e269726599",
+      "beneficiary": "0xe5C43B4AC4147f8Aab8A161E4259252618d7102b",
+      "amount": "1000000",
+      "amountDisplay": "1 ZERO safety canary",
+      "fundingTransaction": "0x1dad6318419c09d9f27014160ee38712c5babe7563a68e7cebf12d37aa68f477",
+      "attestationTransaction": "0xa0689d79a5e8a7f370432a95e522c914c98212ce14c96f43df4274e29f251ba5",
+      "approvalDigest": "0xf7d4617da10b3959c90a35068081d2fb67f22ba66eb4a4402e48083fcd2fc0dc",
+      "settlementTransaction": "0x15bec10706faa00d891f78467fb2c37d9feed745edd6b5e0c4849a10515c4d36",
+      "approvalNonceAfterSettlement": "1"
+    }
   },
   "settlement": {
     "settledAt": "2026-06-21",

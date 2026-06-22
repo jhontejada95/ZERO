@@ -14,8 +14,8 @@ ZERO makes prevention visible, auditable, and financeable. It issues a Preventio
 - Vercel-to-AWS OIDC role: `zero-vercel-production`; no AWS static keys in Vercel.
 - Agent runs persist one summary plus nine immutable milestones in DynamoDB.
 - Coinbase CDP creates and reuses real EOA and smart-wallet addresses for program, treasury, procurement, verifier, and beneficiary agents.
-- The deterministic agent pipeline completes in CDP mode. A reference EAS attestation and escrow settlement are real on Base Sepolia; the UI trace, x402 purchasing, and human approval are still simulated at the orchestration layer.
-- Fourteen automated tests pass, including escrow authorization, altered-receipt rejection, revoked-attestation rejection, double-settlement prevention, counterfactual determinism, and DynamoDB receipt reconstruction.
+- The deterministic agent pipeline completes in CDP mode. Reference EAS/escrow settlement and EIP-712 human authorization are real on Base Sepolia; x402 purchasing remains simulated at the orchestration layer.
+- Sixteen automated tests pass, including human signature authorization, expiry and mutation rejection, replay prevention, altered-receipt rejection, revoked-attestation rejection, counterfactual determinism, and DynamoDB reconstruction.
 
 ## Base Sepolia deployment
 
@@ -48,24 +48,33 @@ On-chain verification completed successfully:
 - Independent RPC reads confirmed the program fields, schema, attester, recipient, encoded amount/token, consumed attestation, and all three token balances.
 - Approval mode was `SIMULATED`; this transaction proves the wallet/EAS/escrow rail, not yet a human authorization workflow.
 
+## Verified human authorization
+
+- Approval escrow: `0x4E719831f1e81730499B5E7e8a1f4B8A6E865d2E`.
+- Authorized human approver: `0x5d8B442bfe432C06328Afc2a4E4b9Bb609301bB5`.
+- EIP-712 binds program, attestation, beneficiary, amount, receipt hash, nonce, deadline, chain, and escrow address.
+- A `1 ZERO` safety canary was used to validate authorization without paying the historical prevention receipt twice.
+- [Funding](https://sepolia.basescan.org/tx/0x1dad6318419c09d9f27014160ee38712c5babe7563a68e7cebf12d37aa68f477), [attestation](https://sepolia.basescan.org/tx/0xa0689d79a5e8a7f370432a95e522c914c98212ce14c96f43df4274e29f251ba5), and [human-approved settlement](https://sepolia.basescan.org/tx/0x15bec10706faa00d891f78467fb2c37d9feed745edd6b5e0c4849a10515c4d36).
+- Independent reads confirmed program status `3`, approval nonce `1`, authorized approver role, matching attestation UID, beneficiary balance increase of `1 ZERO`, and zero escrow balance.
+
 ## Security posture
 
 - Coinbase credentials and Wallet Secret exist only as Vercel Sensitive environment variables.
 - The contract deployer key was exported only into an ephemeral protected server function because CDP contract-creation signing was unavailable through `sendTransaction`; it was never printed or persisted.
 - The temporary deploy endpoint and `ZERO_DEPLOY_KEY` are removed at this checkpoint.
 - The temporary settlement endpoint and `ZERO_SETTLEMENT_KEY` were also removed after execution; production returns `404` for that route.
+- Temporary human-approval deployment/preparation endpoints and keys were removed after use; only the signature-verifying public API remains.
 - `.env*`, `.vercel`, logs, dependencies, build output, and local caches are excluded from Git.
 - The ZERO token is a testnet demonstration asset, not money, a stablecoin, or a claim on fiat.
 
 ## Next priorities
 
-1. Add explicit human approval/signature before attestation and settlement.
-2. Connect the UI agent trace to the persisted real settlement and explorer links.
-3. Replace the local x402 simulator with a live testnet facilitator and paid evidence endpoint.
-4. Connect DeepSeek or Groq for live verification narratives; fallback remains deterministic.
-5. Verify and publish Solidity source code on BaseScan.
-6. Add policy limits, rate limiting, replay protection at the API layer, and operational monitoring.
-7. Produce the Devpost submission, architecture graphic, demo script, and judge-facing evidence.
+1. Connect the complete UI agent trace to the persisted real settlement and explorer links.
+2. Replace the local x402 simulator with a live testnet facilitator and paid evidence endpoint.
+3. Connect DeepSeek or Groq for live verification narratives; fallback remains deterministic.
+4. Verify and publish Solidity source code on BaseScan.
+5. Add policy limits, rate limiting, operational monitoring, and a production approval policy/multisig.
+6. Produce the Devpost submission, architecture graphic, demo script, and judge-facing evidence.
 
 ## Restart commands
 

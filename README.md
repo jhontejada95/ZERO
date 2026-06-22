@@ -39,8 +39,9 @@ ZERO now includes a settlement layer deployed on Base Sepolia:
 - An OpenAI-compatible model adapter for DeepSeek or Groq.
 - A clearly labelled local x402 simulation, ready to be replaced by a live facilitator.
 - A completed Base Sepolia settlement of `2,400,000 ZERO`: [EAS attestation](https://sepolia.basescan.org/tx/0x8cefd61be25cd203d08fdfaa1c4a4f9adee10f3263e3b06ca84333504c642535) and [escrow settlement](https://sepolia.basescan.org/tx/0x346becdf17c0025f39acbf5353a406d26dcb2205d70d23e7683949e5b54b7f26).
+- A second-generation escrow with EIP-712 human authorization, expiry, exact-payload binding, and nonce replay protection. Its [1 ZERO safety canary](https://sepolia.basescan.org/tx/0x15bec10706faa00d891f78467fb2c37d9feed745edd6b5e0c4849a10515c4d36) was signed by the designated human approver and settled on Base Sepolia.
 
-Open `Trace settlement` to execute the agent run. Production uses five real CDP wallet addresses. The reference payment has been broadcast and independently verified on-chain; the UI trace and human-approval step remain simulated until they are connected to the persisted settlement record and an explicit signer flow.
+Open `Trace settlement` to execute the agent run and inspect the human authorization rail. Production uses five real CDP wallet addresses. The reference payment and human-signed safety canary have both been broadcast and independently verified on-chain; x402 remains a clearly labelled local simulation.
 
 ```bash
 npm test
