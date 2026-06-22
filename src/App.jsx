@@ -1,304 +1,134 @@
 import { useEffect, useState } from "react";
 import {
-  ArrowRight,
-  Broadcast,
-  Check,
-  CheckCircle,
-  CloudRain,
-  Database,
-  FileMagnifyingGlass,
-  Fingerprint,
-  FlowArrow,
-  Robot,
-  ShieldCheck,
-  Wallet,
-  UsersThree,
-  X,
+  ArrowLeft, ArrowRight, Buildings, CaretDown, Check, CheckCircle, Clock,
+  Database, FileMagnifyingGlass, Fingerprint, FlowArrow, Gauge, Globe,
+  HandCoins, List, MapPin, Robot, ShieldCheck, SignOut, SquaresFour,
+  UserCircle, UsersThree, Wallet, X,
 } from "@phosphor-icons/react";
 import { demoReceipt } from "./data/demo-receipt.js";
 import { loadReceipt, verifyIntegrity } from "./data/receipt-client.js";
 
-const evidenceIcons = [CloudRain, UsersThree, Database, ShieldCheck];
 const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", notation: "compact", maximumFractionDigits: 1 });
+const roles = {
+  funder: { label: "Fund Manager", org: "Global Resilience Fund", initials: "FM", canApprove: true, accent: "amber" },
+  operator: { label: "Program Operator", org: "La Bocana Resilience Office", initials: "PO", canApprove: false, accent: "cyan" },
+  verifier: { label: "Independent Verifier", org: "Riverside District", initials: "IV", canApprove: false, accent: "cyan" },
+  beneficiary: { label: "Community Representative", org: "La Bocana Community", initials: "CR", canApprove: false, accent: "cyan" },
+  auditor: { label: "Public Auditor", org: "Open Climate Ledger", initials: "PA", canApprove: false, accent: "cyan" },
+};
 
-function formatIssuedAt(value) {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "UTC", timeZoneName: "short",
-  }).format(new Date(value));
-}
+const programs = [
+  { id: "PRG-001", name: "La Bocana Flood Early Warning", place: "Putumayo, Colombia", hazard: "Flood", risk: "High", stage: "Implementation", progress: 75, integrity: 99.2, reserved: "$2.4M", total: "$3.0M", next: "Human approval", image: "/assets/before-flood.png", live: true },
+  { id: "PRG-002", name: "Mindanao Storm Shelters", place: "Davao del Sur, Philippines", hazard: "Storm", risk: "High", stage: "Construction", progress: 60, integrity: 97.8, reserved: "$6.2M", total: "$8.0M", next: "Milestone review", image: "/assets/during-evacuation.png" },
+  { id: "PRG-003", name: "Dhaka Heat Alert", place: "Dhaka, Bangladesh", hazard: "Heat", risk: "Medium", stage: "Operations", progress: 90, integrity: 99.1, reserved: "$1.8M", total: "$2.0M", next: "Data review", image: "/assets/after-safe.png" },
+];
 
-function StoryFrame({ label, caption, src, alt }) {
-  return (
-    <figure className="story-frame">
-      <figcaption><span>{label}</span>{caption}</figcaption>
-      <img src={src} alt={alt} />
-    </figure>
-  );
-}
+const navItems = [
+  ["portfolio", "Portfolio", SquaresFour], ["programs", "Programs", Buildings],
+  ["approvals", "Approvals", CheckCircle], ["settlements", "Settlements", Wallet],
+  ["evidence", "Evidence", Database], ["audit", "Audit", FileMagnifyingGlass],
+];
 
-function CausalStep({ icon: Icon, title, children }) {
-  return (
-    <div className="causal-step">
-      <div className="causal-icon"><Icon size={27} weight="thin" /></div>
-      <div><strong>{title}</strong><p>{children}</p></div>
+function shorten(value) { return value ? `${value.slice(0, 8)}…${value.slice(-6)}` : "—"; }
+
+function Sidebar({ roleKey, setRoleKey, section, setSection, mobileOpen, setMobileOpen }) {
+  const role = roles[roleKey];
+  return <aside className={`product-sidebar ${mobileOpen ? "is-open" : ""}`}>
+    <div className="sidebar-brand">ZERO<button onClick={() => setMobileOpen(false)} aria-label="Close menu"><X size={20} /></button></div>
+    <nav aria-label="Product navigation">
+      {navItems.map(([key, label, Icon]) => <button key={key} className={section === key ? "active" : ""} onClick={() => { setSection(key); setMobileOpen(false); }}>
+        <Icon size={20} weight="thin" /><span>{label}</span>{key === "approvals" && <b>4</b>}
+      </button>)}
+    </nav>
+    <div className="role-panel">
+      <span>VIEWING AS</span>
+      <label><UserCircle size={18} /><select aria-label="View product as role" value={roleKey} onChange={e => { setRoleKey(e.target.value); setSection("portfolio"); }}>
+        {Object.entries(roles).map(([key, value]) => <option key={key} value={key}>{value.label}</option>)}
+      </select><CaretDown size={14} /></label>
+      <div className="role-identity"><i>{role.initials}</i><div><strong>{role.label}</strong><small>{role.org}</small></div></div>
+      <p>{role.canApprove ? "Can review and authorize fund movements." : `${role.label} permissions are intentionally restricted.`}</p>
+      <button className="sign-out"><SignOut size={17} /> Demo identity</button>
     </div>
-  );
+  </aside>;
 }
 
-function Modal({ type, onClose, receipt }) {
-  const isEvidence = type === "evidence";
-  return (
-    <div className="modal-backdrop" role="presentation" onMouseDown={onClose}>
-      <section className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" onMouseDown={(event) => event.stopPropagation()}>
-        <button className="icon-button" onClick={onClose} aria-label="Close dialog"><X size={20} /></button>
-        <p className="eyebrow">{isEvidence ? "AUDITABLE EVIDENCE" : "MODEL VERIFICATION"}</p>
-        <h2 id="modal-title">{isEvidence ? "Every claim has a source." : "The estimate survives scrutiny."}</h2>
-        <p className="modal-intro">
-          {isEvidence
-            ? "ZERO preserves the provenance of every observation used to issue this receipt. Nothing is hidden behind a single AI score."
-            : `A synthetic control built from ${receipt.model.donorCount} comparable communities estimates what would likely have happened without the early-warning intervention.`}
-        </p>
-        {isEvidence ? (
-          <div className="evidence-list">
-            {receipt.evidence.map(({ source, name, detail }, index) => {
-              const Icon = evidenceIcons[index] || Database;
-              return (
-                <div className="evidence-row" key={source}>
-                  <Icon size={25} weight="thin" />
-                  <div><strong>{name}</strong><span>{source} · {detail}</span></div>
-                  <CheckCircle size={20} weight="fill" />
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="model-panel">
-            <div className="model-stat"><span>Pre-period fit</span><strong>{receipt.model.prePeriodRmse} RMSE</strong></div>
-            <div className="model-stat"><span>Estimated lives protected</span><strong>{receipt.model.protectedPeople}</strong></div>
-            <div className="model-stat"><span>Confidence interval</span><strong>{receipt.model.interval.low}–{receipt.model.interval.high}</strong></div>
-            <div className="confidence-track" aria-label={`${Math.round(receipt.model.confidence * 100)} percent confidence`}><i /></div>
-            <p><Check size={17} weight="bold" /> Placebo and sensitivity checks passed</p>
-          </div>
-        )}
-        <button className="modal-primary" onClick={onClose}>Return to receipt <ArrowRight size={18} /></button>
-      </section>
+function Stat({ value, label, detail, tone }) { return <div className={`portfolio-stat ${tone || ""}`}><strong>{value}</strong><span>{label}</span><small>{detail}</small></div>; }
+
+function ProgramRow({ program, onOpen }) {
+  return <button className="program-row" onClick={() => onOpen(program)}>
+    <div className="program-name"><img src={program.image} alt="" /><div><strong>{program.name}</strong><small><MapPin size={12} /> {program.place}</small><em>{program.id} · ON-CHAIN <CheckCircle size={13} weight="fill" /></em></div></div>
+    <div><span>{program.risk}</span><small>{program.hazard}</small></div>
+    <div className="stage-cell"><span>{program.stage}</span><div className="progress-track"><i style={{ width: `${program.progress}%` }} /></div><small>{program.progress}% complete</small></div>
+    <div className="integrity-cell"><strong>{program.integrity}%</strong><small>Verified <CheckCircle size={13} weight="fill" /></small></div>
+    <div className="capital-cell"><strong>{program.reserved}</strong><small>of {program.total}</small></div>
+    <div className="next-cell"><strong>{program.next}</strong><small>{program.live ? "Release 2.4M ZERO" : "Open program"}</small><ArrowRight size={18} /></div>
+  </button>;
+}
+
+function ActionQueue({ role, onReview }) {
+  return <aside className="action-queue">
+    <header><h2>Action queue <b>4</b></h2><button>View all</button></header>
+    <div className="priority-action">
+      <span>HUMAN APPROVAL REQUIRED</span><h3>La Bocana Flood<br />Early Warning</h3><p><MapPin size={14} /> Putumayo, Colombia</p>
+      <strong>Release 2.4M ZERO</strong><small>TO</small><p>Asociación de Juntas de Acción Comunal de La Bocana</p>
+      <div className="queue-proof"><span>Evidence verified</span><b><CheckCircle size={16} weight="fill" /> 99.2% integrity</b><span>On-chain</span><b>Tx 0x7a1b…c2d4 <em>Confirmed</em></b></div>
+      <button className="review-button" onClick={onReview} disabled={!role.canApprove}>{role.canApprove ? "Review authorization" : "Restricted for this role"}<ArrowRight size={18} /></button>
     </div>
-  );
+    <div className="other-actions"><span>OTHER PENDING</span>{["Mindanao Storm Shelters", "Dhaka Heat Alert", "Kenya Drought Finance"].map((item, index) => <button key={item}><span>{item}<small>{["Milestone review", "Data review", "Outcome verification"][index]}</small></span><ArrowRight size={14} /></button>)}</div>
+    <footer><ShieldCheck size={18} /><p>All actions are auditable.<br />Human approvals are required for fund movements.</p></footer>
+  </aside>;
 }
 
-function shorten(value) {
-  return value ? `${value.slice(0, 8)}…${value.slice(-6)}` : "—";
+function Portfolio({ roleKey, onOpen, onReview }) {
+  const role = roles[roleKey];
+  return <div className="portfolio-layout">
+    <main className="portfolio-main">
+      <header className="portfolio-header"><div><p>PREVENTION PORTFOLIO</p><h1>Prevention portfolio</h1><blockquote>What did not happen still deserves proof.</blockquote></div><span>As of 22 Jun 2026, 09:42 COT</span></header>
+      <section className="stats-grid"><Stat value="$18.4M" label="Protected capital" detail="Across 12 programs" tone="amber" /><Stat value="12" label="Active programs" detail="In 7 countries" /><Stat value="4" label="Approvals waiting" detail="$6.1M at risk" tone="amber" /><Stat value="98.7%" label="Evidence integrity" detail="7d weighted average" /></section>
+      <section className="program-table"><div className="table-head"><span>PROGRAM</span><span>RISK</span><span>STAGE</span><span>EVIDENCE HEALTH</span><span>CAPITAL RESERVED</span><span>NEXT ACTION</span></div>{programs.map(program => <ProgramRow key={program.id} program={program} onOpen={onOpen} />)}<button className="view-link" onClick={() => onOpen(programs[0])}>View all programs <ArrowRight size={16} /></button></section>
+      <section className="portfolio-lower"><div><h2>Recent evidence from the field</h2><div className="evidence-strip">{programs.map(p => <button key={p.id} onClick={() => onOpen(p)}><img src={p.image} alt={p.name} /><span>{p.place}</span></button>)}</div></div><div><h2>On-chain status</h2>{programs.map(p => <p className="chain-row" key={p.id}><i />{p.name}<code>Tx 0x{p.id.slice(-3)}b…c2d4</code><strong>Confirmed</strong></p>)}<button className="view-link">View all on-chain activity <ArrowRight size={16} /></button></div></section>
+    </main>
+    <ActionQueue role={role} onReview={onReview} />
+  </div>;
 }
 
-function HumanApprovalPanel() {
-  const [challenge, setChallenge] = useState(null);
-  const [status, setStatus] = useState("loading");
-  const [error, setError] = useState("");
-  const [transaction, setTransaction] = useState("");
+function ReceiptCard({ receipt }) {
+  return <article className="workspace-receipt">
+    <div className="receipt-kicker"><span>ZERO</span><span>DISASTER PREVENTION RECEIPT</span><b>0</b></div><h2>PREVENTION RECEIPT</h2><blockquote>A tragedy prevented is an outcome.</blockquote>
+    <dl><div><dt>INTERVENTION</dt><dd>{receipt.intervention}</dd></div><div><dt>OBSERVED OUTCOME</dt><dd><strong>{receipt.observedOutcome.peopleProtected} people protected</strong></dd></div><div><dt>COUNTERFACTUAL</dt><dd>{receipt.counterfactual.low}–{receipt.counterfactual.high} {receipt.counterfactual.unit}</dd></div><div><dt>CONFIDENCE</dt><dd className="cyan">{Math.round(receipt.confidence * 100)}% confidence</dd></div><div><dt>EVIDENCE</dt><dd>{receipt.evidenceCount} verified data points</dd></div><div><dt>BENEFICIARY</dt><dd>{receipt.beneficiary.community}</dd></div><div><dt>RELEASED VALUE</dt><dd className="amber">{money.format(receipt.payment.amount)} released</dd></div></dl>
+    <footer><span>{receipt.receiptId}</span><span>{receipt.status}</span></footer>
+  </article>;
+}
 
-  useEffect(() => {
-    fetch("/api/human-approval", { headers: { Accept: "application/json" } })
-      .then((response) => response.ok ? response.json() : Promise.reject(new Error("Approval API unavailable")))
-      .then((data) => { setChallenge(data); setStatus(data.status === "SETTLED" ? "settled" : "ready"); })
-      .catch((reason) => { setError(reason.message); setStatus("failed"); });
-  }, []);
-
-  async function approve() {
-    setError("");
-    setStatus("signing");
-    try {
-      if (!window.ethereum) throw new Error("MetaMask is required to approve this settlement.");
-      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-      if (accounts[0]?.toLowerCase() !== challenge.approver.toLowerCase()) throw new Error(`Connect the authorized wallet ${shorten(challenge.approver)}.`);
-      try {
-        await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: "0x14a34" }] });
-      } catch (switchError) {
-        if (switchError.code !== 4902) throw switchError;
-        await window.ethereum.request({ method: "wallet_addEthereumChain", params: [{ chainId: "0x14a34", chainName: "Base Sepolia", nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 }, rpcUrls: ["https://sepolia.base.org"], blockExplorerUrls: ["https://sepolia.basescan.org"] }] });
-      }
-      const { BrowserProvider } = await import("ethers");
-      const signer = await new BrowserProvider(window.ethereum).getSigner();
-      const signature = await signer.signTypedData(challenge.domain, challenge.types, challenge.value);
-      setStatus("settling");
-      const response = await fetch("/api/human-approval", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ signature, deadline: challenge.value.deadline }) });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "Settlement failed");
-      setTransaction(result.transactionHash || "");
-      setStatus("settled");
-    } catch (reason) {
-      setError(reason.shortMessage || reason.message || "Approval cancelled");
-      setStatus("ready");
-    }
-  }
-
-  return (
-    <section className="approval-panel" aria-label="Human settlement approval">
-      <div><span>HUMAN AUTHORIZATION</span><strong>{challenge?.amountDisplay || "Loading approval…"}</strong><p>{challenge?.rationale || "EIP-712 approval bound to the exact outcome."}</p></div>
-      {status === "settled" ? (
-        transaction ? <a href={`https://sepolia.basescan.org/tx/${transaction}`} target="_blank" rel="noreferrer">Approved on Base Sepolia <ArrowRight size={16} /></a> : <em>Already approved and settled</em>
-      ) : (
-        <button onClick={approve} disabled={status !== "ready"}>{status === "signing" ? "Confirm in MetaMask" : status === "settling" ? "Settling on-chain" : "Approve release"}</button>
-      )}
-      {error && <small>{error}</small>}
+function ProgramWorkspace({ receipt, roleKey, onBack, openModal }) {
+  const role = roles[roleKey];
+  return <main className="program-workspace">
+    <header className="workspace-header"><button onClick={onBack}><ArrowLeft size={18} /> Portfolio</button><div><p>PROGRAM · PRG-001</p><h1>La Bocana Flood Early Warning</h1><span><MapPin size={14} /> Putumayo, Colombia · Funded</span></div><div className="workspace-role"><span>YOUR ROLE</span><strong>{role.label}</strong><small>{role.canApprove ? "Can approve settlement" : "Cannot approve funds"}</small></div></header>
+    <section className="workspace-grid">
+      <aside className="lifecycle"><p>PROGRAM LIFECYCLE</p>{[["Program funded", "complete"], ["Evidence purchased", "complete"], ["Intervention verified", "active"], ["Counterfactual reviewed", "pending"], ["Human approval", role.canApprove ? "action" : "locked"], ["Settlement", "locked"]].map(([label, state], index) => <div className={state} key={label}><i>{state === "complete" ? <Check size={16} /> : index + 1}</i><span><strong>{label}</strong><small>{state === "complete" ? "Verified" : state === "active" ? "In progress" : state === "action" ? "Ready for you" : "Pending"}</small></span></div>)}</aside>
+      <ReceiptCard receipt={receipt} />
+      <aside className="workspace-actions"><p>ROLE WORKSPACE</p><section><Gauge size={24} /><span>EVIDENCE READINESS</span><strong>Ready for handoff</strong><small>All required evidence collected and quality-checked.</small></section><section><Robot size={24} /><span>AGENT ACTIVITY</span><strong>9 bounded steps</strong><small>Wallets, x402 and settlement trace available.</small><button onClick={() => openModal("agents")}>Trace settlement <ArrowRight size={15} /></button></section><section><ShieldCheck size={24} /><span>NEXT PERMITTED ACTION</span><strong>{role.canApprove ? "Human authorization" : "Review program evidence"}</strong><button onClick={() => openModal(role.canApprove ? "approval" : "evidence")}>{role.canApprove ? "Review authorization" : "Inspect evidence"}<ArrowRight size={15} /></button></section></aside>
     </section>
-  );
+  </main>;
 }
 
-function AgentRunModal({ onClose }) {
-  const [status, setStatus] = useState("idle");
-  const [run, setRun] = useState(null);
-
-  async function launch() {
-    setStatus("running");
-    try {
-      const response = await fetch("/api/agent-demo", { method: "POST", headers: { Accept: "application/json" } });
-      if (!response.ok) throw new Error(`Agent API returned ${response.status}`);
-      setRun(await response.json());
-      setStatus("complete");
-    } catch {
-      setStatus("failed");
-    }
-  }
-
-  return (
-    <div className="modal-backdrop" role="presentation" onMouseDown={onClose}>
-      <section className="modal agent-modal" role="dialog" aria-modal="true" aria-labelledby="agent-modal-title" onMouseDown={(event) => event.stopPropagation()}>
-        <button className="icon-button" onClick={onClose} aria-label="Close dialog"><X size={20} /></button>
-        <p className="eyebrow">AUTONOMOUS PREVENTION RUN</p>
-        <h2 id="agent-modal-title">Watch every agent earn the right to settle.</h2>
-        <p className="modal-intro">Wallet creation, paid data, evidence, verification, attestation and settlement are exposed as one auditable chain.</p>
-        <HumanApprovalPanel />
-
-        {status === "idle" && (
-          <div className="agent-launch">
-            <div><Robot size={34} weight="thin" /><span>9 bounded steps</span></div>
-            <div><Wallet size={34} weight="thin" /><span>6 agent wallets</span></div>
-            <div><FlowArrow size={34} weight="thin" /><span>1 traceable settlement</span></div>
-          </div>
-        )}
-
-        {status === "running" && <div className="agent-running"><i /><span>Agents are assembling the prevention proof…</span></div>}
-        {status === "failed" && <p className="agent-error">The agent run could not start. No funds or state were changed.</p>}
-
-        {run && (
-          <>
-            <div className="run-summary">
-              <div><span>RUN</span><strong>{run.runId}</strong></div>
-              <div><span>MODE</span><strong>{run.mode}</strong></div>
-              <div><span>SETTLEMENT</span><strong>{run.token.amount.toLocaleString("en-US")} ZERO</strong></div>
-            </div>
-            <ol className="agent-timeline">
-              {run.timeline.map((event) => (
-                <li key={event.index}>
-                  <span className="timeline-index">{String(event.index).padStart(2, "0")}</span>
-                  <div><strong>{event.agent}</strong><small>{event.action}</small><p>{event.detail}</p></div>
-                  <CheckCircle size={18} weight="fill" />
-                </li>
-              ))}
-            </ol>
-            <div className="settlement-proof">
-              <span>BENEFICIARY</span><strong>{shorten(run.settlement.beneficiary)}</strong>
-              <span>TRANSACTION</span><strong>{shorten(run.settlement.transactionHash)}</strong>
-              <span>ASSET</span><strong>ZERO · TESTNET · NO REAL-WORLD VALUE</strong>
-            </div>
-          </>
-        )}
-
-        <button className="modal-primary" onClick={status === "complete" ? onClose : launch} disabled={status === "running"}>
-          {status === "complete" ? "Return to receipt" : status === "failed" ? "Retry agent run" : status === "running" ? "Running agents" : "Launch agent run"}
-          <ArrowRight size={18} />
-        </button>
-      </section>
-    </div>
-  );
+function EvidenceModal({ type, receipt, onClose }) {
+  const approval = type === "approval";
+  return <div className="modal-backdrop" onMouseDown={onClose}><section className="modal" role="dialog" aria-modal="true" onMouseDown={e => e.stopPropagation()}><button className="icon-button" onClick={onClose}><X size={20} /></button><p className="eyebrow">{approval ? "HUMAN AUTHORIZATION" : "AUDITABLE EVIDENCE"}</p><h2>{approval ? "Review before value moves." : "Every claim has a source."}</h2><p className="modal-intro">{approval ? "The authorization is bound to the exact program, beneficiary, amount, receipt hash and expiry." : "ZERO preserves provenance for every observation used to issue this receipt."}</p>{approval ? <div className="approval-summary"><span>BENEFICIARY</span><strong>{receipt.beneficiary.community}</strong><span>AMOUNT</span><strong>2,400,000 ZERO</strong><span>APPROVAL RAIL</span><strong>EIP-712 · Base Sepolia</strong></div> : <div className="evidence-list">{receipt.evidence.map(item => <div className="evidence-row" key={item.source}><Database size={22} /><div><strong>{item.name}</strong><span>{item.source} · {item.detail}</span></div><CheckCircle size={19} weight="fill" /></div>)}</div>}<button className="modal-primary" onClick={onClose}>{approval ? "Authorization already settled" : "Return to program"}<ArrowRight size={18} /></button></section></div>;
 }
+
+function AgentModal({ onClose }) {
+  const [status, setStatus] = useState("idle"); const [run, setRun] = useState(null);
+  async function launch() { setStatus("running"); try { const response = await fetch("/api/agent-demo", { method: "POST", headers: { Accept: "application/json" } }); if (!response.ok) throw new Error(); setRun(await response.json()); setStatus("complete"); } catch { setStatus("failed"); } }
+  return <div className="modal-backdrop" onMouseDown={onClose}><section className="modal agent-modal" role="dialog" aria-modal="true" onMouseDown={e => e.stopPropagation()}><button className="icon-button" onClick={onClose}><X size={20} /></button><p className="eyebrow">AUTONOMOUS PREVENTION RUN</p><h2>Every agent earns the right to settle.</h2><p className="modal-intro">Wallet creation, paid data, verification and settlement remain one auditable chain.</p>{status === "idle" && <div className="agent-launch"><div><Robot size={30} /><span>9 bounded steps</span></div><div><Wallet size={30} /><span>6 agent wallets</span></div><div><FlowArrow size={30} /><span>1 settlement</span></div></div>}{status === "running" && <div className="agent-running"><i /><span>Assembling the prevention proof…</span></div>}{status === "failed" && <p className="agent-error">The run could not start. No funds or state were changed.</p>}{run && <ol className="agent-timeline">{run.timeline.map(event => <li key={event.index}><span>{String(event.index).padStart(2, "0")}</span><div><strong>{event.agent}</strong><small>{event.action}</small><p>{event.detail}</p></div><CheckCircle size={17} weight="fill" /></li>)}</ol>}<button className="modal-primary" disabled={status === "running"} onClick={status === "complete" ? onClose : launch}>{status === "complete" ? "Return to program" : status === "running" ? "Running agents" : "Launch agent run"}<ArrowRight size={18} /></button></section></div>;
+}
+
+function SectionPlaceholder({ section, onBack }) { const labels = { programs: "All prevention programs", approvals: "Human approvals", settlements: "Settlement ledger", evidence: "Evidence registry", audit: "Public audit trail" }; return <main className="section-placeholder"><p>ZERO · {section.toUpperCase()}</p><h1>{labels[section]}</h1><blockquote>This workspace is filtered by role. Every visible action is permitted, attributable and auditable.</blockquote><button onClick={onBack}>Return to portfolio <ArrowRight size={18} /></button></main>; }
 
 export function App() {
-  const [modal, setModal] = useState(null);
-  const [receipt, setReceipt] = useState(demoReceipt);
-  const [verification, setVerification] = useState("idle");
-
-  useEffect(() => {
-    let active = true;
-    loadReceipt(demoReceipt.receiptId).then((result) => {
-      if (active) setReceipt(result);
-    });
-    return () => { active = false; };
-  }, []);
-
-  async function verifyReceipt() {
-    setVerification("checking");
-    setVerification((await verifyIntegrity(receipt)) ? "verified" : "failed");
-  }
-
-  const verificationLabel = verification === "checking"
-    ? "Checking proof"
-    : verification === "verified"
-      ? "Receipt verified"
-      : verification === "failed"
-        ? "Verification failed"
-        : "Verify identity";
-
-  return (
-    <main className="app-shell">
-      <header className="brand-row">
-        <a className="brand" href="#receipt" aria-label="ZERO home">ZERO</a>
-        <div className="event-meta"><span>{receipt.storage === "DYNAMODB" ? "DYNAMODB LIVE" : "DEMO LEDGER"}</span><strong>{receipt.receiptId}</strong></div>
-        <button className={`verification-pill ${verification === "verified" ? "is-verified" : ""}`} onClick={verifyReceipt} disabled={verification === "checking" || !receipt.proof}>
-          <Fingerprint size={18} /> {verificationLabel}
-        </button>
-      </header>
-
-      <section className="experience" id="receipt">
-        <aside className="story-column" aria-label="Community story">
-          <StoryFrame label="BEFORE" caption="Early warning issued" src="/assets/before-flood.png" alt="Riverside homes beneath storm clouds" />
-          <div className="story-line" aria-hidden="true" />
-          <StoryFrame label="DURING" caption="Evacuation in progress" src="/assets/during-evacuation.png" alt="Responders guiding families during evacuation" />
-          <div className="story-line" aria-hidden="true" />
-          <StoryFrame label="AFTER" caption="Community safe" src="/assets/after-safe.png" alt="Families safely watching the river valley at dawn" />
-        </aside>
-
-        <article className="receipt">
-          <div className="receipt-top"><span>ZERO</span><span className="zero-mark">0</span></div>
-          <h1>PREVENTION RECEIPT</h1>
-          <p className="manifesto">A tragedy prevented is an outcome.</p>
-          <dl className="receipt-fields">
-            <div><dt>INTERVENTION</dt><dd>{receipt.intervention}</dd></div>
-            <div><dt>OBSERVED OUTCOME</dt><dd className="hero-value">{receipt.observedOutcome.peopleProtected} people protected</dd></div>
-            <div><dt>COUNTERFACTUAL ESTIMATE</dt><dd>{receipt.counterfactual.low}–{receipt.counterfactual.high} {receipt.counterfactual.unit}<br /><small>without this intervention</small></dd></div>
-            <div className="confidence-row"><dt>CONFIDENCE BAND</dt><dd><strong>{Math.round(receipt.confidence * 100)}%</strong> confidence<div className="receipt-track"><i /></div><div className="track-labels"><span>90%</span><span>98%</span></div></dd></div>
-            <div><dt>EVIDENCE COUNT</dt><dd>{receipt.evidenceCount} verified data points</dd></div>
-            <div><dt>BENEFICIARY COMMUNITY</dt><dd>{receipt.beneficiary.community}<br /><small>{receipt.beneficiary.location}</small></dd></div>
-            <div><dt>RELEASED PAYMENT</dt><dd className="payment">{money.format(receipt.payment.amount)} released</dd></div>
-          </dl>
-          <footer className="receipt-footer">
-            <div><span>RECEIPT ID</span><strong>{receipt.receiptId}</strong></div>
-            <div><span>ISSUED</span><strong>{formatIssuedAt(receipt.issuedAt)}</strong></div>
-            <div><span>VERIFIED BY</span><strong>{receipt.verifiedBy}</strong></div>
-            <div><span>STATUS</span><strong>{receipt.status}</strong></div>
-          </footer>
-          <div className="seal" aria-label="ZERO proof of rescue seal"><span>ZERO</span><strong>0</strong><small>PROOF OF RESCUE</small></div>
-        </article>
-
-        <aside className="causal-column" aria-label="Causal chain">
-          <p className="eyebrow">CAUSAL CHAIN</p>
-          <div className="causal-flow">
-            <CausalStep icon={Broadcast} title="EARLY WARNING">Hazard detected and verified</CausalStep>
-            <CausalStep icon={UsersThree} title="EVACUATION">Timely action by community and responders</CausalStep>
-            <CausalStep icon={ShieldCheck} title="LIVES PROTECTED">Tragedy averted through prevention</CausalStep>
-          </div>
-          <div className="outcome-note"><span>OUTCOME</span><p>A tragedy prevented<br />is an outcome.</p></div>
-        </aside>
-      </section>
-
-      <nav className="action-bar" aria-label="Receipt actions">
-        <button onClick={() => setModal("evidence")}><span className="action-icon"><FileMagnifyingGlass size={28} weight="thin" /></span><span><strong>Inspect evidence</strong><small>Review data, sources, and audits</small></span><ArrowRight size={24} /></button>
-        <button onClick={() => setModal("model")}><span className="action-icon"><ShieldCheck size={28} weight="thin" /></span><span><strong>Verify model</strong><small>Review assumptions and estimation</small></span><ArrowRight size={24} /></button>
-        <button onClick={() => setModal("agents")}><span className="action-icon"><Robot size={28} weight="thin" /></span><span><strong>Trace settlement</strong><small>Run agents, wallets, x402 and payment</small></span><ArrowRight size={24} /></button>
-      </nav>
-
-      {modal === "agents" && <AgentRunModal onClose={() => setModal(null)} />}
-      {modal && modal !== "agents" && <Modal type={modal} receipt={receipt} onClose={() => setModal(null)} />}
-    </main>
-  );
+  const [receipt, setReceipt] = useState(demoReceipt); const [roleKey, setRoleKey] = useState("funder"); const [section, setSection] = useState("portfolio"); const [programOpen, setProgramOpen] = useState(false); const [modal, setModal] = useState(null); const [mobileOpen, setMobileOpen] = useState(false); const [verified, setVerified] = useState(false);
+  useEffect(() => { let active = true; loadReceipt(demoReceipt.receiptId).then(result => active && setReceipt(result)); return () => { active = false; }; }, []);
+  const role = roles[roleKey];
+  async function verify() { setVerified(await verifyIntegrity(receipt)); }
+  return <div className="product-shell"><Sidebar {...{ roleKey, setRoleKey, section, setSection, mobileOpen, setMobileOpen }} /><div className="product-content"><div className="mobile-topbar"><button aria-label="Open navigation" onClick={() => setMobileOpen(true)}><List size={22} /></button><strong>ZERO</strong><span>{role.initials}</span></div><div className="integrity-bar"><button onClick={verify}><Fingerprint size={16} />{verified ? "Receipt integrity verified" : receipt.storage === "DYNAMODB" ? "DYNAMODB LIVE" : "DEMO LEDGER"}</button><span><Globe size={15} /> Base Sepolia · Testnet</span></div>{programOpen ? <ProgramWorkspace receipt={receipt} roleKey={roleKey} onBack={() => setProgramOpen(false)} openModal={setModal} /> : section === "portfolio" ? <Portfolio roleKey={roleKey} onOpen={() => setProgramOpen(true)} onReview={() => setModal("approval")} /> : <SectionPlaceholder section={section} onBack={() => setSection("portfolio")} />}</div>{modal === "agents" ? <AgentModal onClose={() => setModal(null)} /> : modal && <EvidenceModal type={modal} receipt={receipt} onClose={() => setModal(null)} />}</div>;
 }

@@ -10,6 +10,7 @@ ZERO makes prevention visible, auditable, and financeable. It issues a Preventio
 
 - Live application: https://zero-plum-eta.vercel.app
 - React/Vite receipt experience deployed on Vercel.
+- Role-aware Prevention Command Center implemented locally with five stakeholder perspectives, permission-sensitive actions, portfolio management, and a dedicated La Bocana program workspace.
 - DynamoDB single-table receipt storage in `us-east-2`.
 - Vercel-to-AWS OIDC role: `zero-vercel-production`; no AWS static keys in Vercel.
 - Agent runs persist one summary plus nine immutable milestones in DynamoDB.
@@ -79,11 +80,11 @@ On-chain verification completed successfully:
 
 ## Next priorities
 
-1. Separate the product into role-specific journeys and permissions for funders, operators, verifiers, beneficiaries, and auditors.
+1. Replace the demo role selector with real authentication and server-enforced authorization.
 2. Connect the complete UI agent trace to persisted real settlements and explorer links.
-3. Connect DeepSeek or Groq for live verification narratives; fallback remains deterministic.
-4. Verify and publish Solidity source code on BaseScan.
-5. Add policy limits, rate limiting, operational monitoring, and a production approval policy/multisig.
+3. Protect paid agent execution with authentication, rate limits, idempotency, and spending budgets.
+4. Connect DeepSeek or Groq for live verification narratives; fallback remains deterministic.
+5. Verify and publish Solidity source code on BaseScan.
 6. Produce the Devpost submission, architecture graphic, demo script, and judge-facing evidence.
 
 ## Restart commands

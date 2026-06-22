@@ -27,6 +27,8 @@ ZERO can be the verification layer for parametric insurance, climate-resilience 
 
 The React interface is backed by a Vercel Receipt API and a deliberate DynamoDB single-table model. One strongly consistent event query reconstructs the receipt, its versioned model run, and every evidence record. The API calculates an integrity proof which the browser independently verifies before displaying `Receipt verified`.
 
+The product experience is now role-aware. A Prevention Command Center separates portfolio management, program operations, independent verification, beneficiary visibility, and public audit. The fund manager sees capital and authorization actions; other roles see restricted, attributable workflows instead of universal access. The original Prevention Receipt remains the public proof inside each program workspace.
+
 The local experience safely falls back to a sealed demonstration ledger when AWS is not configured. Production uses short-lived Vercel OIDC credentials to assume the read-only `zero-vercel-production` AWS role; no long-lived AWS access keys are stored in Vercel. A successful database response identifies itself as `DYNAMODB LIVE`, making the integration visible during judging.
 
 ZERO now includes a settlement layer deployed on Base Sepolia:

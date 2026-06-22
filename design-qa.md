@@ -1,36 +1,46 @@
-# Design QA — ZERO Prevention Receipt
+# ZERO product dashboard design QA
 
-- Source visual: `design-reference/proof-of-absence.png`
-- Implementation screenshot: `implementation-v2.png`
-- Combined full-frame evidence: `design-comparison-v2.png`
-- Focused receipt evidence: `design-comparison-receipt-v2.png`
-- Viewport/state: 1905 × 1024 Chrome viewport, default receipt state; implementation canvas centered at 1440 px.
+- Source visual truth: `docs/product-dashboard-reference.png`
+- Implementation screenshot: `docs/product-dashboard-implementation.png`
+- Combined comparison: `docs/product-dashboard-comparison.png`
+- Program workspace evidence: `docs/program-workspace-implementation.png`
+- Viewport: 1440 × 1024
+- State: Fund Manager · Prevention portfolio; separate Program Operator permission check
 
-## Findings and patches
+## Full-view comparison evidence
 
-1. **P1 — vertical hierarchy drift (layout): fixed.** The first implementation placed a separate header above the experience, pushing the receipt and narrative below the reference composition. The header is now overlaid within the experience, the application canvas is capped at 1440 px, and the receipt begins near the source visual's top edge.
-2. **P1 — excessive desktop spread (spacing/layout): fixed.** The initial three-column grid expanded across the entire browser width. Track widths and gaps are now constrained so the documentary sequence, receipt, and causal chain retain the compact institutional composition of the source.
-3. **P2 — generic imagery (image fidelity): fixed.** Placeholder imagery was replaced with purpose-generated documentary frames for the same before/during/after flood narrative and optimized without changing their semantic content.
-4. **P2 — missing first-screen behavior (states/interactions): fixed.** Evidence inspection, model verification, dialog dismissal, and receipt identity verification are implemented and populated with realistic demonstration data.
-5. **P2 — accessibility baseline: fixed.** Images have descriptive alt text, major regions are labelled, controls are semantic buttons, dialogs expose accessible names, and focus-visible treatment is present.
+The implementation preserves the reference's three-track frame: 212 px role/navigation rail, fluid portfolio workspace, and 286 px action queue. Program density, metric hierarchy, documentary imagery, cyan verification states, amber financial actions, fine dividers, and the editorial serif/mono/product typography system align with the visual target. The initial 36 px provenance strip was identified as vertical drift and converted to a floating indicator before the final capture.
 
-## Verification
+## Focused-region comparison evidence
 
-- Production build succeeds with Vite.
-- Evidence modal opens and exposes four auditable sources.
-- Model modal opens and exposes fit, estimate, interval, and sensitivity status.
-- Identity control transitions from `Verify identity` to `Receipt verified`.
-- No application-origin console errors were observed; warnings originated from an unrelated browser extension.
-- Full-frame comparison preserves the black institutional canvas, off-white receipt, documentary chronology, causal chain, cyan verification accents, and amber outcome/payment accents.
+- Navigation and identity: selected section, approval count, role selector, identity, organization, and permission language are present and aligned.
+- Program table: all six information columns, image crops, progress states, evidence integrity, capital, and next actions remain legible without nested-card styling.
+- Action queue: beneficiary, amount, evidence state, transaction state, primary authorization action, and pending actions match the target hierarchy.
+- Program workspace: the selected program opens into a distinct lifecycle/Receipt/role-actions view; it is evidence of the requested separation beyond the first screen.
 
-## Agent trace extension
+## Findings
 
-- The third action preserves the established action-bar pattern.
-- The scroll-contained agent dialog matches the dark institutional canvas, mono metadata, and cyan verification states.
-- Interactive verification passed in Chrome: the dialog launches a nine-step run and renders five wallets, an x402 purchase, evidence root, model verification, approval gate, EAS attestation, settlement, and audit.
-- The completed state explicitly labels the asset `TESTNET · NO REAL-WORLD VALUE`.
-- No P0, P1, or P2 visual or interaction issue remains in the tested desktop state.
+No actionable P0, P1, or P2 findings remain.
 
-## Final result
+## Required fidelity surfaces
 
-passed
+- Fonts and typography: Libre Caslon Text, DM Sans, and DM Mono match the reference's editorial, product, and metadata roles. Display scale, body sizes, line height, and wrapping are coherent at the target viewport.
+- Spacing and layout rhythm: three-column frame, row density, dividers, gutters, and vertical rhythm match the target. No clipping or overlap was observed at 1440 px; responsive collapse rules exist at 1100 px and 760 px.
+- Colors and visual tokens: near-black base, warm paper, cyan verification, amber approval, muted metadata, and green confirmation states map correctly to semantic use.
+- Image quality and asset fidelity: all three documentary images are real project assets, use appropriate grayscale treatment and crop, and are not replaced by placeholders or CSS art.
+- Copy and content: funder, program, beneficiary, amount, integrity, role, permission, and on-chain language form a coherent product workflow.
+- Icons: Phosphor icons provide one consistent thin-line family; no handcrafted SVG or glyph substitute is used.
+- States and interactions: navigation, role selection, role-restricted approval, program opening, back navigation, modals, integrity check, and responsive menu are implemented. Agent execution remains opt-in so visual QA does not generate an unnecessary x402 payment.
+- Accessibility: controls use semantic buttons/selects, documentary images have alt text, disabled approval is programmatic, and responsive tap targets are preserved.
+
+## Patches made since previous QA pass
+
+- Converted the technical provenance bar from a 36 px layout row into a floating indicator so the dashboard aligns with the target's top edge.
+- Verified that Program Operator cannot trigger fund authorization.
+- Verified that Fund Manager can open La Bocana and reach its role-aware workspace.
+
+## Follow-up polish
+
+- P3: replace the demo user's initials with a real profile image only when identity/authentication is connected.
+
+final result: passed
