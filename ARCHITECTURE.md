@@ -13,7 +13,10 @@ flowchart LR
   P --> V
   V --> C[Client-side integrity verification]
   O --> W[CDP smart wallets]
-  O --> X[x402 data purchase]
+  O --> X[x402-protected evidence API]
+  X --> F[x402 facilitator]
+  F --> Q[Base Sepolia USDC settlement]
+  Q --> X
   O --> T[EAS attestation]
   T --> S[ZERO settlement escrow]
   S --> B[Beneficiary wallet]
@@ -35,6 +38,8 @@ This access pattern scales horizontally by event, avoids joins during verificati
 ## Agent and settlement boundary
 
 Agents collect evidence, propose verification, and request settlement; they do not override contract policy. The escrow independently checks the EAS schema, verifier role, receipt hash, beneficiary, token, amount, expiration, revocation, and replay status before transferring funds. CDP creates named agent wallets when configured; local and CI runs use deterministic public addresses without private keys.
+
+The procurement agent requests a protected observation and receives HTTP `402`. Its CDP EOA signs the x402/EIP-3009 authorization, the facilitator verifies and settles Base Sepolia USDC to the evidence-provider EOA, and only then does the endpoint return the observation. ZERO hashes that purchased evidence into the persisted agent trace.
 
 The model provider is optional and cannot decide financial facts. `AI_BASE_URL`, `AI_API_KEY`, and `AI_MODEL` support OpenAI-compatible providers such as DeepSeek or Groq. Without a key, the same workflow remains functional using deterministic narratives.
 

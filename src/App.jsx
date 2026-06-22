@@ -172,7 +172,7 @@ function AgentRunModal({ onClose }) {
         {status === "idle" && (
           <div className="agent-launch">
             <div><Robot size={34} weight="thin" /><span>9 bounded steps</span></div>
-            <div><Wallet size={34} weight="thin" /><span>5 agent wallets</span></div>
+            <div><Wallet size={34} weight="thin" /><span>6 agent wallets</span></div>
             <div><FlowArrow size={34} weight="thin" /><span>1 traceable settlement</span></div>
           </div>
         )}

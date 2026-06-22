@@ -3,6 +3,7 @@ import { canonicalize, proofPayload } from "./receipt-proof.mjs";
 import { generateAgentNarrative } from "./ai-provider.mjs";
 import { walletProviderFromEnvironment } from "./agent-wallets.mjs";
 import { LocalX402Adapter } from "./x402-simulator.mjs";
+import { LiveX402Adapter } from "./x402-live.mjs";
 
 function hexHash(value) {
   return `0x${createHash("sha256").update(typeof value === "string" ? value : canonicalize(value)).digest("hex")}`;
@@ -14,7 +15,7 @@ function timelineEvent(index, agent, action, detail, proof = {}) {
 
 export async function runAgentPipeline(receipt, options = {}) {
   const walletProvider = options.walletProvider || walletProviderFromEnvironment();
-  const x402 = options.x402 || new LocalX402Adapter();
+  const x402 = options.x402 || (process.env.ZERO_X402_RESOURCE_URL ? new LiveX402Adapter() : new LocalX402Adapter());
   const programId = hexHash(`PROGRAM:${receipt.eventId}`);
   const receiptHash = hexHash(proofPayload(receipt));
   const wallets = {};
@@ -22,7 +23,8 @@ export async function runAgentPipeline(receipt, options = {}) {
 
   wallets.program = await walletProvider.getOrCreateWallet(`zero-${receipt.eventId}`, "smart");
   wallets.treasury = await walletProvider.getOrCreateWallet("zero-climate-fund", "smart");
-  wallets.procurement = await walletProvider.getOrCreateWallet(`zero-procurement-${receipt.eventId}`, "smart");
+  wallets.procurement = await walletProvider.getOrCreateWallet(`zero-procurement-${receipt.eventId}`, "eoa");
+  wallets.evidenceProvider = await walletProvider.getOrCreateWallet("zero-evidence-provider", "eoa");
   wallets.verifier = await walletProvider.getOrCreateWallet("zero-verifier", "eoa");
   wallets.beneficiary = await walletProvider.getOrCreateWallet(`zero-beneficiary-${receipt.eventId}`, "smart");
   timeline.push(timelineEvent(1, "Program Agent", "PROGRAM_CREATED", "Created the prevention program and scoped agent wallets.", { programId, wallet: wallets.program.address }));
@@ -31,8 +33,15 @@ export async function runAgentPipeline(receipt, options = {}) {
   const fundingTx = hexHash(`FUND:${programId}:${tokenAmount}`);
   timeline.push(timelineEvent(2, "Treasury Agent", "ESCROW_FUNDED", `${tokenAmount.toLocaleString("en-US")} ZERO reserved for verified prevention.`, { transactionHash: fundingTx, treasury: wallets.treasury.address }));
 
-  const purchase = await x402.purchase({ resource: "/climate/risk/la-bocana", payer: wallets.procurement, amount: 25 });
-  timeline.push(timelineEvent(3, "Procurement Agent", "X402_DATA_PURCHASED", "Paid for an independent river-risk observation.", { transactionHash: purchase.payment.transactionHash, quoteId: purchase.challenge.quoteId }));
+  const purchase = await x402.purchase({ resource: "/climate/risk/la-bocana", payer: wallets.procurement, seller: wallets.evidenceProvider, amount: 0.001 });
+  timeline.push(timelineEvent(3, "Procurement Agent", "X402_DATA_PURCHASED", "Paid for an independent river-risk observation.", {
+    transactionHash: purchase.payment.transactionHash,
+    protocol: purchase.protocol,
+    network: purchase.challenge.network,
+    amount: purchase.challenge.amount,
+    payer: purchase.payment.payer,
+    payTo: purchase.payment.payTo,
+  }));
 
   const purchasedEvidenceHash = hexHash(purchase.resource);
   const evidenceRoot = hexHash([...receipt.evidence, { source: purchase.resource.sensorId, hash: purchasedEvidenceHash }]);

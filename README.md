@@ -37,11 +37,12 @@ ZERO now includes a settlement layer deployed on Base Sepolia:
 - Program, treasury, procurement, evidence, verification, attestation, settlement, and audit agents.
 - Automatic CDP EVM/smart-wallet creation when Coinbase credentials are configured.
 - An OpenAI-compatible model adapter for DeepSeek or Groq.
-- A clearly labelled local x402 simulation, ready to be replaced by a live facilitator.
+- A live x402 v2 evidence endpoint: the procurement agent signs through its CDP wallet and pays an independent provider in Base Sepolia USDC before receiving the observation.
+- A confirmed `0.001 USDC` evidence purchase: [x402 payment](https://sepolia.basescan.org/tx/0x5af11df3fa44a89a01d50caf0d65c6d16786a2eedec0712be112eed64f771ea9).
 - A completed Base Sepolia settlement of `2,400,000 ZERO`: [EAS attestation](https://sepolia.basescan.org/tx/0x8cefd61be25cd203d08fdfaa1c4a4f9adee10f3263e3b06ca84333504c642535) and [escrow settlement](https://sepolia.basescan.org/tx/0x346becdf17c0025f39acbf5353a406d26dcb2205d70d23e7683949e5b54b7f26).
 - A second-generation escrow with EIP-712 human authorization, expiry, exact-payload binding, and nonce replay protection. Its [1 ZERO safety canary](https://sepolia.basescan.org/tx/0x15bec10706faa00d891f78467fb2c37d9feed745edd6b5e0c4849a10515c4d36) was signed by the designated human approver and settled on Base Sepolia.
 
-Open `Trace settlement` to execute the agent run and inspect the human authorization rail. Production uses five real CDP wallet addresses. The reference payment and human-signed safety canary have both been broadcast and independently verified on-chain; x402 remains a clearly labelled local simulation.
+Open `Trace settlement` to execute the agent run and inspect the human authorization rail. Production uses six real CDP wallet addresses, including separate procurement and evidence-provider EOAs. The reference ZERO settlement, human-signed safety canary, and x402 USDC evidence purchase have all been broadcast and independently verified on-chain.
 
 ```bash
 npm test

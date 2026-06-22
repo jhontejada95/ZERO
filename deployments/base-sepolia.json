@@ -53,6 +53,23 @@
       "approvalNonceAfterSettlement": "1"
     }
   },
+  "x402": {
+    "status": "CONFIRMED",
+    "protocol": "x402-v2",
+    "network": "eip155:84532",
+    "resource": "/api/climate-risk",
+    "asset": {
+      "name": "USDC",
+      "address": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+      "amount": "1000",
+      "amountDisplay": "0.001 USDC"
+    },
+    "payer": "0x4ce18f7303CF69844bf8e1E6F83a220e64875F73",
+    "payTo": "0x96Df7fa9aC0f4dd1A6a493Df7743e0f3E816E334",
+    "faucetTransaction": "0x3f584d4539cafb8442b201c856cfca17503fc06f2a10fcac1aceb8825a1c9e00",
+    "paymentTransaction": "0x5af11df3fa44a89a01d50caf0d65c6d16786a2eedec0712be112eed64f771ea9",
+    "blockNumber": 43161974
+  },
   "settlement": {
     "settledAt": "2026-06-21",
     "status": "SETTLED",

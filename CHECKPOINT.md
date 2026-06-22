@@ -13,8 +13,8 @@ ZERO makes prevention visible, auditable, and financeable. It issues a Preventio
 - DynamoDB single-table receipt storage in `us-east-2`.
 - Vercel-to-AWS OIDC role: `zero-vercel-production`; no AWS static keys in Vercel.
 - Agent runs persist one summary plus nine immutable milestones in DynamoDB.
-- Coinbase CDP creates and reuses real EOA and smart-wallet addresses for program, treasury, procurement, verifier, and beneficiary agents.
-- The deterministic agent pipeline completes in CDP mode. Reference EAS/escrow settlement and EIP-712 human authorization are real on Base Sepolia; x402 purchasing remains simulated at the orchestration layer.
+- Coinbase CDP creates and reuses six real EOA and smart-wallet addresses for program, treasury, procurement, evidence provider, verifier, and beneficiary agents.
+- The deterministic agent pipeline completes in CDP mode. Reference EAS/escrow settlement, EIP-712 human authorization, and the x402 USDC evidence purchase are real on Base Sepolia.
 - Sixteen automated tests pass, including human signature authorization, expiry and mutation rejection, replay prevention, altered-receipt rejection, revoked-attestation rejection, counterfactual determinism, and DynamoDB reconstruction.
 
 ## Base Sepolia deployment
@@ -57,6 +57,16 @@ On-chain verification completed successfully:
 - [Funding](https://sepolia.basescan.org/tx/0x1dad6318419c09d9f27014160ee38712c5babe7563a68e7cebf12d37aa68f477), [attestation](https://sepolia.basescan.org/tx/0xa0689d79a5e8a7f370432a95e522c914c98212ce14c96f43df4274e29f251ba5), and [human-approved settlement](https://sepolia.basescan.org/tx/0x15bec10706faa00d891f78467fb2c37d9feed745edd6b5e0c4849a10515c4d36).
 - Independent reads confirmed program status `3`, approval nonce `1`, authorized approver role, matching attestation UID, beneficiary balance increase of `1 ZERO`, and zero escrow balance.
 
+## Verified x402 evidence purchase
+
+- Protocol: x402 v2 on Base Sepolia (`eip155:84532`).
+- Paid resource: `/api/climate-risk`; an unauthenticated request returns HTTP `402` with a machine-readable payment requirement.
+- Procurement payer: `0x4ce18f7303CF69844bf8e1E6F83a220e64875F73`.
+- Independent evidence provider: `0x96Df7fa9aC0f4dd1A6a493Df7743e0f3E816E334`.
+- Payment: exactly `0.001 USDC` (`1000` base units), [confirmed on BaseScan](https://sepolia.basescan.org/tx/0x5af11df3fa44a89a01d50caf0d65c6d16786a2eedec0712be112eed64f771ea9).
+- CDP signs the EIP-3009 authorization; the x402 facilitator verifies and settles it without exposing a private key.
+- Independent RPC reads confirmed receipt status `1`, the USDC contract, sender, recipient, and exact transfer amount.
+
 ## Security posture
 
 - Coinbase credentials and Wallet Secret exist only as Vercel Sensitive environment variables.
@@ -69,8 +79,8 @@ On-chain verification completed successfully:
 
 ## Next priorities
 
-1. Connect the complete UI agent trace to the persisted real settlement and explorer links.
-2. Replace the local x402 simulator with a live testnet facilitator and paid evidence endpoint.
+1. Separate the product into role-specific journeys and permissions for funders, operators, verifiers, beneficiaries, and auditors.
+2. Connect the complete UI agent trace to persisted real settlements and explorer links.
 3. Connect DeepSeek or Groq for live verification narratives; fallback remains deterministic.
 4. Verify and publish Solidity source code on BaseScan.
 5. Add policy limits, rate limiting, operational monitoring, and a production approval policy/multisig.
@@ -86,4 +96,4 @@ npm run contracts:compile
 npm run dev
 ```
 
-No secret is required for local simulation. Live CDP and AWS behavior requires the Vercel environment configured for the production project.
+No secret is required for the local fallback. Live CDP, x402, and AWS behavior requires the Vercel environment configured for the production project.
