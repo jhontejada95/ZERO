@@ -34,7 +34,7 @@
 - Architecture diagram showing Vercel front end and AWS data layer.
 - Real DynamoDB read visible in the `DYNAMODB LIVE` provenance label.
 - Reproducible model-run record, not a one-off AI answer.
-- Clear disclosure that current event data is a demonstration scenario.
+- Clear disclosure that the La Bocana case is the reference scenario used to demonstrate the protocol, with the settlement, EAS, x402 and human-approval rails backed by Base Sepolia transactions.
 - One credible buyer story: insurer, development bank, or municipal resilience fund.
 
 ## North-star metric

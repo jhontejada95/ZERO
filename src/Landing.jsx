@@ -178,6 +178,12 @@ export function Landing() {
       <Chapter number="11" kicker="UNDER THE HOOD" id="architecture" className="architecture-intro">
         <div><p>THE COMPLETE SYSTEM</p><h2>Four layers.<br />One chain of accountability.</h2></div><p>Each layer answers a different question: who acts, how work moves, how claims become credible and how value settles safely.</p>
       </Chapter>
+      <section className="protocol-blueprint" aria-label="ZERO architecture blueprint">
+        <header><p>ARCHITECTURE BLUEPRINT</p><h2>Agent proposes. Human authorizes. Contract settles. Auditor reconstructs.</h2></header>
+        <div className="blueprint-grid">
+          {["Funder commits capital", "Operator executes prevention", "Evidence providers submit data", "Agents package proof", "Verifier issues attestation", "Human signs EIP-712", "Escrow releases ZERO", "Auditor reconstructs receipt"].map((item, index) => <article key={item}><span>{String(index + 1).padStart(2, "0")}</span><h3>{item}</h3><p>{index < 4 ? "Off-chain work becomes signed, hashed and attributable." : "On-chain rules make the outcome inspectable and enforceable."}</p></article>)}
+        </div>
+      </section>
       <div className="architecture-stack">{layers.map((layer,index) => <ArchitectureLayer key={layer.number} layer={layer} open={openLayer === index} onToggle={() => setOpenLayer(openLayer === index ? -1 : index)} />)}</div>
 
       <Chapter number="16" kicker="TRACEABILITY / LIVE PROOF" id="traceability" className="traceability-chapter">

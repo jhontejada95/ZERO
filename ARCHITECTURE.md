@@ -49,7 +49,7 @@ The model provider is optional and cannot decide financial facts. `AI_BASE_URL`,
 2. Enable recovery with `aws dynamodb update-continuous-backups --table-name zero-events --point-in-time-recovery-specification PointInTimeRecoveryEnabled=true`.
 3. Vercel production assumes the read-only `zero-vercel-production` role through a project- and environment-scoped OIDC trust policy. Set `AWS_ROLE_ARN`, `ZERO_TABLE_NAME`, `ZERO_DEMO_EVENT_ID`, and `AWS_REGION` in the deployment; no long-lived AWS keys are required.
 4. Run `npm run seed:dynamodb` once with the same AWS environment.
-5. Deploy to Vercel. The interface changes its provenance label from `DEMO LEDGER` to `DYNAMODB LIVE` only when the API returns a reconstructed receipt.
+5. Deploy to Vercel. The interface changes its provenance label from `TESTNET REFERENCE` to `DYNAMODB LIVE` only when the API returns a reconstructed receipt.
 6. Configure CDP and AI variables, grant DynamoDB milestone-write permissions, register the EAS schema, and deploy the token and escrow to Base Sepolia.
 
 ## Provisioned proof
