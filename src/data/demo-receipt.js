@@ -29,6 +29,5 @@ export const demoReceipt = {
     { source: "AUD-02", name: "Independent audit", detail: "Assumptions reviewed", hash: "sha256:94ac77" },
   ],
   verifiedBy: "ZERO Verification Network",
-  storage: "DEMO",
+  storage: "TESTNET_REFERENCE",
 };
-

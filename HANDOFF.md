@@ -372,14 +372,14 @@ Next deployment task:
 
 ## Current top pending tasks
 
-1. Merge or promote PR #1 and deploy landing to Vercel.
-2. Implement role-separated product IA and screens.
-3. Replace placeholder screens for Programs, Approvals, Evidence and Audit.
-4. Wire visible human approval flow to the testnet/on-chain proof already prepared.
-5. Add clearer transaction/attestation explorer links in the audit view.
-6. Create hackathon demo script and pitch narrative.
-7. Create final Devpost submission content.
-8. Optional polish: unique imagery for future applications, Spanish/English toggle, better reduced-motion rules.
+1. PR #1 was merged into `main` with squash commit `4fd0a6141fea3312c01148d8e2de64fb5d868926`.
+2. Final closure work is now on branch `codex/final-blockchain-demo`.
+3. Programs, Approvals, Settlements, Evidence and Audit now render on-chain sections instead of generic placeholders.
+4. Visible human approval flow now points to EIP-712 canary proof on Base Sepolia.
+5. Audit view now exposes contracts, EAS, x402, settlement and explorer links.
+6. Hackathon pitch/demo script is in `HACKATHON_DELIVERY.md`.
+7. Security scan and delivery controls are in `SECURITY_CHECK.md`.
+8. Remaining priority: run final build/tests, deploy, verify production routes and open/merge final PR.
 
 ## Design principles to preserve
 
@@ -401,3 +401,4 @@ Next deployment task:
 - 2026-06-23: Deployed role-separated Command Center update to production and verified the new bundle is live.
 - 2026-06-23: Added `/enter` stakeholder gateway, removed sidebar role switching, pointed landing CTAs to `/enter`, and rebuilt section 08 as a clearer proof/capital flow map.
 - 2026-06-23: Deployed stakeholder gateway and chapter 08 fix to production; verified `/`, `/enter`, `/app?role=funder`, and production bundle text.
+- 2026-06-23: Merged PR #1 to `main`, created branch `codex/final-blockchain-demo`, added on-chain proof data source, replaced internal placeholders with blockchain-backed role sections, changed `/api/agent-demo` to return confirmed Base Sepolia proof timeline, added architecture blueprint, delivery kit and security check.
