@@ -30,6 +30,7 @@ Direct recording links:
 - Verifier evidence: `https://zero-plum-eta.vercel.app/app?role=verifier&section=evidence`
 - Auditor trail: `https://zero-plum-eta.vercel.app/app?role=auditor&section=audit`
 - Operator programs: `https://zero-plum-eta.vercel.app/app?role=operator&section=programs`
+- Proof/capital flow: `https://zero-plum-eta.vercel.app/#flows`
 
 ## Video pitch script — 2 minutes 30 seconds
 

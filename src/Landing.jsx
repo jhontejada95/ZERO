@@ -158,7 +158,7 @@ export function Landing() {
         <div className="actor-grid">{actors.map(([title, copy, Icon], index) => <article key={title} className={index === 5 ? "actor-human" : ""}><Icon size={30} weight="thin" /><span>{String(index + 1).padStart(2,"0")}</span><h3>{title}</h3><p>{copy}</p></article>)}</div>
       </Chapter>
 
-      <Chapter number="08" kicker="PROOF FLOW & CAPITAL FLOW" className="flows-chapter">
+      <Chapter number="08" kicker="PROOF FLOW & CAPITAL FLOW" id="flows" className="flows-chapter">
         <div className="chapter-intro"><p>HOW THE SYSTEM CIRCULATES TRUST</p><h2>Evidence travels forward.<br />Accountability travels back.</h2></div>
         <div className="flow-map-v2">{trustFlows.map(flow => <article className={flow.kind} key={flow.title}><header><span>{flow.title}</span><p>{flow.summary}</p></header><ol>{flow.steps.map((step, index) => <li key={step}><i>{String(index + 1).padStart(2, "0")}</i><b>{step}</b>{index < flow.steps.length - 1 && <ArrowRight size={18} />}</li>)}</ol></article>)}</div>
       </Chapter>
