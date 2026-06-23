@@ -348,6 +348,9 @@ Latest production deployment performed from branch `codex/protocol-landing`:
 - Second deployment after routing fix: `https://zero-3armd1bkx-jhontejada95s-projects.vercel.app`
 - Production alias after second deploy: `https://zero-plum-eta.vercel.app`
 - Verified after second deploy: `/` returns 200 and `/app` returns 200.
+- Third deployment after role-separated workspace update: `https://zero-keed7y279-jhontejada95s-projects.vercel.app`
+- Production alias after third deploy: `https://zero-plum-eta.vercel.app`
+- Verified after third deploy: `/app` returns 200 and production JS bundle contains `Capital release desk`, confirming the role-separated UI is live.
 
 Vercel has environment variables configured. Before deploying:
 
@@ -388,3 +391,4 @@ Next deployment task:
 - 2026-06-23: Deployed branch `codex/protocol-landing` to Vercel production. Found `/app` 404 due SPA routing and added explicit Vercel rewrites for `/app`.
 - 2026-06-23: Redeployed after route fix. Production alias `https://zero-plum-eta.vercel.app` now serves both `/` and `/app` with 200 responses.
 - 2026-06-23: Implemented first pass of role-separated Command Center surfaces for funder, operator, verifier, beneficiary/community and auditor.
+- 2026-06-23: Deployed role-separated Command Center update to production and verified the new bundle is live.
