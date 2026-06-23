@@ -235,6 +235,14 @@ The next major product design/build should separate these roles:
 
 Priority: make ZERO feel like a real multi-stakeholder platform.
 
+Progress update:
+
+- Added a first role-separated product layer in `src/App.jsx`.
+- Each demo role now has a distinct product surface, thesis, allowed actions and forbidden actions.
+- Portfolio now shows a role-specific workspace brief before shared program data.
+- Placeholder pages now inherit the active role context instead of showing generic copy.
+- Action queue now explains why non-funder roles cannot authorize fund movement.
+
 Recommended next implementation:
 
 1. Preserve `/` landing.
@@ -337,6 +345,9 @@ Latest production deployment performed from branch `codex/protocol-landing`:
 - Vercel status: Ready.
 - `/` returned 200 after deploy.
 - `/app` initially returned Vercel `NOT_FOUND`; fix added in `vercel.json` with rewrites for `/app` and `/app/:path*` to `/`.
+- Second deployment after routing fix: `https://zero-3armd1bkx-jhontejada95s-projects.vercel.app`
+- Production alias after second deploy: `https://zero-plum-eta.vercel.app`
+- Verified after second deploy: `/` returns 200 and `/app` returns 200.
 
 Vercel has environment variables configured. Before deploying:
 
@@ -375,3 +386,5 @@ Next deployment task:
 
 - 2026-06-23: Created this handoff after landing PR #1 was opened. Next agent should prioritize deployment/merge and role-separated product UX.
 - 2026-06-23: Deployed branch `codex/protocol-landing` to Vercel production. Found `/app` 404 due SPA routing and added explicit Vercel rewrites for `/app`.
+- 2026-06-23: Redeployed after route fix. Production alias `https://zero-plum-eta.vercel.app` now serves both `/` and `/app` with 200 responses.
+- 2026-06-23: Implemented first pass of role-separated Command Center surfaces for funder, operator, verifier, beneficiary/community and auditor.
