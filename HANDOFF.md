@@ -330,6 +330,14 @@ Known production URL from earlier:
 
 `https://zero-plum-eta.vercel.app`
 
+Latest production deployment performed from branch `codex/protocol-landing`:
+
+- Deployment URL: `https://zero-kyim8zfb4-jhontejada95s-projects.vercel.app`
+- Production alias: `https://zero-plum-eta.vercel.app`
+- Vercel status: Ready.
+- `/` returned 200 after deploy.
+- `/app` initially returned Vercel `NOT_FOUND`; fix added in `vercel.json` with rewrites for `/app` and `/app/:path*` to `/`.
+
 Vercel has environment variables configured. Before deploying:
 
 - Ensure PR/branch has expected changes.
@@ -366,3 +374,4 @@ Next deployment task:
 ## Latest handoff update log
 
 - 2026-06-23: Created this handoff after landing PR #1 was opened. Next agent should prioritize deployment/merge and role-separated product UX.
+- 2026-06-23: Deployed branch `codex/protocol-landing` to Vercel production. Found `/app` 404 due SPA routing and added explicit Vercel rewrites for `/app`.
