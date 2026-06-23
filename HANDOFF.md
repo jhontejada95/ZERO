@@ -355,6 +355,9 @@ Latest production deployment performed from branch `codex/protocol-landing`:
 - Third deployment after role-separated workspace update: `https://zero-keed7y279-jhontejada95s-projects.vercel.app`
 - Production alias after third deploy: `https://zero-plum-eta.vercel.app`
 - Verified after third deploy: `/app` returns 200 and production JS bundle contains `Capital release desk`, confirming the role-separated UI is live.
+- Fourth deployment after stakeholder gateway and chapter 08 fix: `https://zero-ps7epo407-jhontejada95s-projects.vercel.app`
+- Production alias after fourth deploy: `https://zero-plum-eta.vercel.app`
+- Verified after fourth deploy: `/`, `/enter`, and `/app?role=funder` return 200. Production JS bundle contains `Enter as a stakeholder` and `What makes the prevention claim credible`.
 
 Vercel has environment variables configured. Before deploying:
 
@@ -397,3 +400,4 @@ Next deployment task:
 - 2026-06-23: Implemented first pass of role-separated Command Center surfaces for funder, operator, verifier, beneficiary/community and auditor.
 - 2026-06-23: Deployed role-separated Command Center update to production and verified the new bundle is live.
 - 2026-06-23: Added `/enter` stakeholder gateway, removed sidebar role switching, pointed landing CTAs to `/enter`, and rebuilt section 08 as a clearer proof/capital flow map.
+- 2026-06-23: Deployed stakeholder gateway and chapter 08 fix to production; verified `/`, `/enter`, `/app?role=funder`, and production bundle text.
