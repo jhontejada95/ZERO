@@ -1,46 +1,37 @@
-# ZERO product dashboard design QA
+# ZERO public landing — design QA
 
-- Source visual truth: `docs/product-dashboard-reference.png`
-- Implementation screenshot: `docs/product-dashboard-implementation.png`
-- Combined comparison: `docs/product-dashboard-comparison.png`
-- Program workspace evidence: `docs/program-workspace-implementation.png`
-- Viewport: 1440 × 1024
-- State: Fund Manager · Prevention portfolio; separate Program Operator permission check
-
-## Full-view comparison evidence
-
-The implementation preserves the reference's three-track frame: 212 px role/navigation rail, fluid portfolio workspace, and 286 px action queue. Program density, metric hierarchy, documentary imagery, cyan verification states, amber financial actions, fine dividers, and the editorial serif/mono/product typography system align with the visual target. The initial 36 px provenance strip was identified as vertical drift and converted to a floating indicator before the final capture.
-
-## Focused-region comparison evidence
-
-- Navigation and identity: selected section, approval count, role selector, identity, organization, and permission language are present and aligned.
-- Program table: all six information columns, image crops, progress states, evidence integrity, capital, and next actions remain legible without nested-card styling.
-- Action queue: beneficiary, amount, evidence state, transaction state, primary authorization action, and pending actions match the target hierarchy.
-- Program workspace: the selected program opens into a distinct lifecycle/Receipt/role-actions view; it is evidence of the requested separation beyond the first screen.
+- Source visual truth: `docs/landing-reference.png`
+- Rendered implementation: `docs/landing-implementation.png`
+- Full-view comparison evidence: `docs/landing-qa-comparison.png`
+- Focused implementation evidence: `docs/landing-bottom-implementation.png`, `docs/landing-mobile-implementation.png`
+- Desktop viewport: 1247 px browser content width; 21,776 px rendered document height
+- Mobile viewport: 390 × 844 px target; 375 px content width after scrollbar allocation
+- State: public landing at `/`, first architecture layer expanded; `/app` navigation verified
 
 ## Findings
 
-No actionable P0, P1, or P2 findings remain.
+No actionable P0, P1 or P2 findings remain.
 
-## Required fidelity surfaces
+- Fonts and typography: Libre Caslon Text, DM Sans and DM Mono preserve the selected editorial hierarchy. Display type remains readable and intentional at desktop and mobile widths; no truncation was found.
+- Spacing and layout rhythm: the implementation intentionally expands the compact source into 19 paced chapters, matching the user's approved direction. Major sections use large vertical intervals, actors use three rows, and each architecture layer has its own chapter-sized block.
+- Colors and visual tokens: near-black, warm paper, cyan proof, amber capital/human authorization and green confirmation states map consistently to the source and the existing Command Center.
+- Image quality and asset fidelity: existing ZERO documentary assets and paper texture are used at native aspect-appropriate crops with grayscale treatment. No visible placeholder, CSS illustration or handcrafted SVG substitute is present.
+- Copy and content: the protocol is defined before the La Bocana example. The sequence clearly covers essence, universal problem, inputs, transformation, outputs, boundaries, actors, trust, example, architecture, traceability, business model and future applications.
+- Icons: one consistent Phosphor icon family is used with restrained thin weights and semantic coloring.
+- Interaction states: sticky chapter navigation, smooth chapter jumps, mobile menu, architecture accordions, external explorer link and all `/app` entry links are implemented. The second architecture accordion was expanded and verified; the primary header CTA navigated to `/app` successfully.
+- Responsiveness and accessibility: desktop and mobile document widths match their client widths with no horizontal overflow. Semantic headings, buttons, links, `aria-expanded`, focus-visible states and descriptive content imagery are present.
 
-- Fonts and typography: Libre Caslon Text, DM Sans, and DM Mono match the reference's editorial, product, and metadata roles. Display scale, body sizes, line height, and wrapping are coherent at the target viewport.
-- Spacing and layout rhythm: three-column frame, row density, dividers, gutters, and vertical rhythm match the target. No clipping or overlap was observed at 1440 px; responsive collapse rules exist at 1100 px and 760 px.
-- Colors and visual tokens: near-black base, warm paper, cyan verification, amber approval, muted metadata, and green confirmation states map correctly to semantic use.
-- Image quality and asset fidelity: all three documentary images are real project assets, use appropriate grayscale treatment and crop, and are not replaced by placeholders or CSS art.
-- Copy and content: funder, program, beneficiary, amount, integrity, role, permission, and on-chain language form a coherent product workflow.
-- Icons: Phosphor icons provide one consistent thin-line family; no handcrafted SVG or glyph substitute is used.
-- States and interactions: navigation, role selection, role-restricted approval, program opening, back navigation, modals, integrity check, and responsive menu are implemented. Agent execution remains opt-in so visual QA does not generate an unnecessary x402 payment.
-- Accessibility: controls use semantic buttons/selects, documentary images have alt text, disabled approval is programmatic, and responsive tap targets are preserved.
+## Patches made during QA
 
-## Patches made since previous QA pass
-
-- Converted the technical provenance bar from a 36 px layout row into a floating indicator so the dashboard aligns with the target's top edge.
-- Verified that Program Operator cannot trigger fund authorization.
-- Verified that Fund Manager can open La Bocana and reach its role-aware workspace.
+- Added horizontal overflow containment after the first bottom-of-page capture exposed a scrollbar.
+- Corrected the final documentary image alternative text.
+- Confirmed the mobile hero, final manifesto, route separation and expandable architecture behavior after patching.
 
 ## Follow-up polish
 
-- P3: replace the demo user's initials with a real profile image only when identity/authentication is connected.
+- [P3] Commission unique documentary imagery for every future application when ZERO has real field programs in those domains; the MVP intentionally reuses the approved ZERO documentary asset set.
+- [P3] Add reduced-motion media rules if richer scroll animation is introduced later. The current implementation uses native smooth scrolling only.
+
+## Final result
 
 final result: passed

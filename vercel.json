@@ -1,6 +1,9 @@
 {
   "framework": "vite",
   "rewrites": [
+    { "source": "/app", "destination": "/" },
+    { "source": "/app/:path*", "destination": "/" },
+    { "source": "/enter", "destination": "/" },
     { "source": "/receipt/:id", "destination": "/" }
   ]
 }
