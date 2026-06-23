@@ -24,6 +24,13 @@ ZERO is monetizable as the verification and settlement layer for insurers, resil
 10. Go to `Audit`; show reconstruction order and Base Sepolia txs.
 11. Open `Trace settlement`; show confirmed on-chain agent timeline.
 
+Direct recording links:
+
+- Funder approvals: `https://zero-plum-eta.vercel.app/app?role=funder&section=approvals`
+- Verifier evidence: `https://zero-plum-eta.vercel.app/app?role=verifier&section=evidence`
+- Auditor trail: `https://zero-plum-eta.vercel.app/app?role=auditor&section=audit`
+- Operator programs: `https://zero-plum-eta.vercel.app/app?role=operator&section=programs`
+
 ## Video pitch script — 2 minutes 30 seconds
 
 ### 0:00–0:15 — Hook

@@ -56,6 +56,11 @@ function getInitialRole() {
   return roles[fromQuery] ? fromQuery : roles[fromStorage] ? fromStorage : null;
 }
 
+function getInitialSection() {
+  const section = new URLSearchParams(window.location.search).get("section");
+  return navItems.some(([key]) => key === section) ? section : "portfolio";
+}
+
 function enterAs(roleKey) {
   window.localStorage?.setItem("zero-demo-role", roleKey);
   window.location.href = `/app?role=${roleKey}`;
@@ -213,7 +218,7 @@ export function RoleGateway() {
 }
 
 export function PlatformApp() {
-  const [receipt, setReceipt] = useState(demoReceipt); const [roleKey] = useState(getInitialRole); const [section, setSection] = useState("portfolio"); const [programOpen, setProgramOpen] = useState(false); const [modal, setModal] = useState(null); const [mobileOpen, setMobileOpen] = useState(false); const [verified, setVerified] = useState(false);
+  const [receipt, setReceipt] = useState(demoReceipt); const [roleKey] = useState(getInitialRole); const [section, setSection] = useState(getInitialSection); const [programOpen, setProgramOpen] = useState(false); const [modal, setModal] = useState(null); const [mobileOpen, setMobileOpen] = useState(false); const [verified, setVerified] = useState(false);
   useEffect(() => { let active = true; loadReceipt(demoReceipt.receiptId).then(result => active && setReceipt(result)); return () => { active = false; }; }, []);
   const role = roles[roleKey];
   async function verify() { setVerified(await verifyIntegrity(receipt)); }
