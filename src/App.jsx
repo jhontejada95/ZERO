@@ -42,11 +42,11 @@ const roleWorkspaces = {
 function shorten(value) { return value ? `${value.slice(0, 8)}…${value.slice(-6)}` : "—"; }
 
 const demoIdentities = {
-  funder: { email: "maya@globalresilience.fund", passcode: "funder-demo", promise: "Authorize capital only when the receipt, evidence and human signature agree." },
-  operator: { email: "ops@labocana.org", passcode: "operator-demo", promise: "Coordinate field execution and evidence tasks without fund controls." },
-  verifier: { email: "verifier@riverside.review", passcode: "verify-demo", promise: "Challenge claims, inspect provenance and publish verification notes." },
-  beneficiary: { email: "community@labocana.org", passcode: "community-demo", promise: "See what was protected, what was released and why." },
-  auditor: { email: "audit@openclimate.ledger", passcode: "audit-demo", promise: "Reconstruct every claim from evidence to settlement." },
+  funder: { email: "maya@globalresilience.fund", passcode: "base-sepolia-funder", promise: "Authorize capital only when the receipt, evidence and human signature agree." },
+  operator: { email: "ops@labocana.org", passcode: "base-sepolia-operator", promise: "Coordinate field execution and evidence tasks without fund controls." },
+  verifier: { email: "verifier@riverside.review", passcode: "base-sepolia-verifier", promise: "Challenge claims, inspect provenance and publish verification notes." },
+  beneficiary: { email: "community@labocana.org", passcode: "base-sepolia-community", promise: "See what was protected, what was released and why." },
+  auditor: { email: "audit@openclimate.ledger", passcode: "base-sepolia-auditor", promise: "Reconstruct every claim from evidence to settlement." },
 };
 
 function getInitialRole() {
@@ -75,7 +75,7 @@ function Sidebar({ roleKey, section, setSection, mobileOpen, setMobileOpen }) {
       <span>AUTHENTICATED ROLE</span>
       <div className="role-identity"><i>{role.initials}</i><div><strong>{role.label}</strong><small>{role.org}</small></div></div>
       <p>{role.canApprove ? "Can review and authorize fund movements." : `${role.label} permissions are intentionally restricted.`}</p>
-      <button className="sign-out" onClick={() => { window.localStorage?.removeItem("zero-demo-role"); window.location.href = "/enter"; }}><SignOut size={17} /> Change demo identity</button>
+      <button className="sign-out" onClick={() => { window.localStorage?.removeItem("zero-demo-role"); window.location.href = "/enter"; }}><SignOut size={17} /> Change reference identity</button>
     </div>
   </aside>;
 }
@@ -207,7 +207,7 @@ export function RoleGateway() {
   const identity = demoIdentities[selected];
   return <main className="gateway-shell">
     <a className="gateway-back" href="/"><ArrowLeft size={17} /> Back to protocol</a>
-    <section className="gateway-hero"><div><p>ZERO PRODUCT ACCESS</p><h1>Enter as a stakeholder.</h1><blockquote>For the demo, each identity is preconfigured. In production this becomes authenticated access, scoped permissions and organization-level policy.</blockquote></div><aside><span>DEMO LOGIN</span><strong>{identity.email}</strong><small>Passcode: {identity.passcode}</small><button onClick={() => enterAs(selected)}>Continue to {roles[selected].label}<ArrowRight size={17} /></button></aside></section>
+    <section className="gateway-hero"><div><p>ZERO PRODUCT ACCESS</p><h1>Enter as a stakeholder.</h1><blockquote>Each reference identity is scoped to a different responsibility in the Base Sepolia proof flow. Production access maps these same boundaries to authenticated organizations and policy.</blockquote></div><aside><span>TESTNET ACCESS</span><strong>{identity.email}</strong><small>Reference passcode: {identity.passcode}</small><button onClick={() => enterAs(selected)}>Continue to {roles[selected].label}<ArrowRight size={17} /></button></aside></section>
     <section className="gateway-grid" aria-label="Choose stakeholder role">{Object.entries(roles).map(([key, role]) => <button key={key} className={selected === key ? "active" : ""} onClick={() => setSelected(key)}><i>{role.initials}</i><span>{role.label}</span><strong>{role.org}</strong><p>{demoIdentities[key].promise}</p></button>)}</section>
   </main>;
 }

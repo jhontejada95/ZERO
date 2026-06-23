@@ -24,6 +24,76 @@ ZERO is monetizable as the verification and settlement layer for insurers, resil
 10. Go to `Audit`; show reconstruction order and Base Sepolia txs.
 11. Open `Trace settlement`; show confirmed on-chain agent timeline.
 
+## Video pitch script — 2 minutes 30 seconds
+
+### 0:00–0:15 — Hook
+
+“Every year, the world spends billions after disasters happen. But when prevention works, the tragedy disappears — and so does the proof. ZERO starts from one belief: prevention is an outcome.”
+
+Show the landing hero: `PREVENTION IS AN OUTCOME.`
+
+### 0:15–0:35 — Problem
+
+“Today, we can count losses, deaths, payouts and damage. But we struggle to verify avoided harm. That means capital keeps rewarding reaction instead of prevention. Communities that act early often cannot prove what they prevented.”
+
+Scroll to the evidence paradox / section 8 area.
+
+### 0:35–0:55 — Solution
+
+“ZERO is a protocol that turns verified prevention into a Prevention Receipt: a public, auditable artifact that binds evidence, counterfactual analysis, human authorization and blockchain settlement.”
+
+Show section 8: proof flow and capital flow.
+
+### 0:55–1:20 — How it works
+
+“The rule is simple: agents may propose, but they cannot move money. Evidence providers submit data. Agents package and analyze it. Verifiers challenge the claim. A human signs the exact approval. Then a smart contract releases value only if the receipt, attestation, amount, beneficiary and signature all match.”
+
+Show the architecture blueprint.
+
+### 1:20–1:45 — Product demo
+
+“Now we enter the platform as a stakeholder. Each role sees a different surface. A funder sees capital and approval risk. An operator sees execution. A verifier sees evidence. A community sees the receipt. An auditor sees reconstruction.”
+
+Open `/enter`, choose Fund Manager, continue to `/app`.
+
+### 1:45–2:10 — Blockchain proof
+
+“This is not just a mock dashboard. The MVP includes Base Sepolia contracts, a ZERO test token, an EAS attestation, an x402 USDC evidence purchase, an EIP-712 human authorization canary and an escrow settlement.”
+
+Open `Approvals`, `Evidence`, and `Audit`. Click or hover tx links if recording permits.
+
+### 2:10–2:25 — Monetization
+
+“ZERO can become the verification and settlement layer for insurers, resilience funds, governments, humanitarian organizations and climate finance portfolios. We earn from verified settlements, evidence services and institutional protocol access.”
+
+Show business model section or audit trail.
+
+### 2:25–2:40 — Close
+
+“The future should not only be measured by what survived. It should be measured by what we prevented. ZERO makes prevention visible, auditable and payable.”
+
+End on final manifesto or Prevention Receipt.
+
+## Shorter 60-second version
+
+“ZERO is a protocol for paying for prevention. Today, disaster finance pays after harm is visible. But when prevention works, there is no obvious record — so avoided harm stays unfunded.
+
+ZERO creates that record. It turns evidence, counterfactual analysis, independent verification and human authorization into a Prevention Receipt. Agents coordinate the work, but they cannot move money. A smart contract releases value only when the exact receipt, attestation, beneficiary, amount and signature match.
+
+In our MVP, La Bocana shows the complete flow: 37 people protected, 127 evidence points, 94% confidence and 2.4M ZERO released on Base Sepolia. We also show x402 paid evidence, EAS attestation, EIP-712 human authorization and an auditable settlement trail.
+
+ZERO is infrastructure for insurers, resilience funds, governments and humanitarian finance. We are not building another donation app. We are building the protocol layer that makes prevented harm visible, trustworthy and payable.”
+
+## Recording checklist
+
+- Keep cursor movement slow.
+- Start on the landing hero.
+- Do not spend too long reading text; narrate the idea.
+- Show `/enter` to prove stakeholder separation.
+- Show `Approvals`, `Evidence`, and `Audit` as the technical proof.
+- Mention Base Sepolia out loud.
+- End with the manifesto line.
+
 ## What is real today
 
 - Public Vercel deployment.
