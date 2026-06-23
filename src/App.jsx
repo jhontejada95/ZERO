@@ -7,6 +7,7 @@ import {
 } from "@phosphor-icons/react";
 import { demoReceipt } from "./data/demo-receipt.js";
 import { loadReceipt, verifyIntegrity } from "./data/receipt-client.js";
+import { Landing } from "./Landing.jsx";
 
 const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", notation: "compact", maximumFractionDigits: 1 });
 const roles = {
@@ -125,10 +126,15 @@ function AgentModal({ onClose }) {
 
 function SectionPlaceholder({ section, onBack }) { const labels = { programs: "All prevention programs", approvals: "Human approvals", settlements: "Settlement ledger", evidence: "Evidence registry", audit: "Public audit trail" }; return <main className="section-placeholder"><p>ZERO · {section.toUpperCase()}</p><h1>{labels[section]}</h1><blockquote>This workspace is filtered by role. Every visible action is permitted, attributable and auditable.</blockquote><button onClick={onBack}>Return to portfolio <ArrowRight size={18} /></button></main>; }
 
-export function App() {
+export function PlatformApp() {
   const [receipt, setReceipt] = useState(demoReceipt); const [roleKey, setRoleKey] = useState("funder"); const [section, setSection] = useState("portfolio"); const [programOpen, setProgramOpen] = useState(false); const [modal, setModal] = useState(null); const [mobileOpen, setMobileOpen] = useState(false); const [verified, setVerified] = useState(false);
   useEffect(() => { let active = true; loadReceipt(demoReceipt.receiptId).then(result => active && setReceipt(result)); return () => { active = false; }; }, []);
   const role = roles[roleKey];
   async function verify() { setVerified(await verifyIntegrity(receipt)); }
   return <div className="product-shell"><Sidebar {...{ roleKey, setRoleKey, section, setSection, mobileOpen, setMobileOpen }} /><div className="product-content"><div className="mobile-topbar"><button aria-label="Open navigation" onClick={() => setMobileOpen(true)}><List size={22} /></button><strong>ZERO</strong><span>{role.initials}</span></div><div className="integrity-bar"><button onClick={verify}><Fingerprint size={16} />{verified ? "Receipt integrity verified" : receipt.storage === "DYNAMODB" ? "DYNAMODB LIVE" : "DEMO LEDGER"}</button><span><Globe size={15} /> Base Sepolia · Testnet</span></div>{programOpen ? <ProgramWorkspace receipt={receipt} roleKey={roleKey} onBack={() => setProgramOpen(false)} openModal={setModal} /> : section === "portfolio" ? <Portfolio roleKey={roleKey} onOpen={() => setProgramOpen(true)} onReview={() => setModal("approval")} /> : <SectionPlaceholder section={section} onBack={() => setSection("portfolio")} />}</div>{modal === "agents" ? <AgentModal onClose={() => setModal(null)} /> : modal && <EvidenceModal type={modal} receipt={receipt} onClose={() => setModal(null)} />}</div>;
+}
+
+export function App() {
+  const path = window.location.pathname.replace(/\/+$/, "") || "/";
+  return path === "/app" || path.startsWith("/app/") ? <PlatformApp /> : <Landing />;
 }
