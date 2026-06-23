@@ -242,6 +242,10 @@ Progress update:
 - Portfolio now shows a role-specific workspace brief before shared program data.
 - Placeholder pages now inherit the active role context instead of showing generic copy.
 - Action queue now explains why non-funder roles cannot authorize fund movement.
+- Added `/enter` as an intermediate demo-login/stakeholder selection route between the landing and `/app`.
+- Removed the mutable role selector from the app sidebar; `/app` now reads the selected role from `?role=` or `localStorage`.
+- Landing CTAs now point to `/enter` instead of directly to `/app`.
+- Reworked landing chapter 08 from a cramped inline diagram into two readable rails: proof flow and capital flow.
 
 Recommended next implementation:
 
@@ -392,3 +396,4 @@ Next deployment task:
 - 2026-06-23: Redeployed after route fix. Production alias `https://zero-plum-eta.vercel.app` now serves both `/` and `/app` with 200 responses.
 - 2026-06-23: Implemented first pass of role-separated Command Center surfaces for funder, operator, verifier, beneficiary/community and auditor.
 - 2026-06-23: Deployed role-separated Command Center update to production and verified the new bundle is live.
+- 2026-06-23: Added `/enter` stakeholder gateway, removed sidebar role switching, pointed landing CTAs to `/enter`, and rebuilt section 08 as a clearer proof/capital flow map.

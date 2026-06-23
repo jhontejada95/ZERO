@@ -41,6 +41,11 @@ const uses = [
   ["Infrastructure resilience", "Preventive maintenance tied to avoided disruption.", "/assets/after-safe.png"],
 ];
 
+const trustFlows = [
+  { kind: "proof", title: "Proof flow", summary: "What makes the prevention claim credible.", steps: ["Field action", "Evidence packet", "Agent review", "Independent verifier", "Human approval", "Prevention Receipt"] },
+  { kind: "capital", title: "Capital flow", summary: "How value moves only after the claim is approved.", steps: ["Funder commits", "Escrow holds", "Conditions checked", "Human signs", "Contract releases", "Community receives"] },
+];
+
 function Chapter({ number, kicker, id, className = "", children }) {
   return <section id={id} className={`landing-chapter ${className}`}>
     <div className="chapter-meta"><b>{number}</b><span>{kicker}</span></div>
@@ -114,7 +119,7 @@ export function Landing() {
 
     <main className="landing-main">
       <Chapter number="01" kicker="ESSENCE / CATEGORY DEFINITION" id="essence" className="landing-hero">
-        <div className="hero-copy"><h1>PREVENTION<br />IS AN OUTCOME.</h1><p className="hero-definition">ZERO is a protocol that turns verified prevention into auditable outcomes and conditional payments.</p><p className="hero-clarifier">It does not predict disasters or replace responders. It proves when preventive action reduced harm—and coordinates who may fund, verify, approve and receive value.</p><div className="hero-actions"><button onClick={() => go("protocol")}>Understand the protocol <ArrowDown size={17} /></button><a href="/app">Enter the platform <ArrowRight size={17} /></a></div></div>
+        <div className="hero-copy"><h1>PREVENTION<br />IS AN OUTCOME.</h1><p className="hero-definition">ZERO is a protocol that turns verified prevention into auditable outcomes and conditional payments.</p><p className="hero-clarifier">It does not predict disasters or replace responders. It proves when preventive action reduced harm—and coordinates who may fund, verify, approve and receive value.</p><div className="hero-actions"><button onClick={() => go("protocol")}>Understand the protocol <ArrowDown size={17} /></button><a href="/enter">Enter the platform <ArrowRight size={17} /></a></div></div>
         <div className="essence-model">
           <div><span>INPUTS</span><p><CheckCircle size={18} /> Prevention objective</p><p><Database size={18} /> Intervention evidence</p><p><Warning size={18} /> Risk baseline</p></div><FlowArrowIcon />
           <div className="zero-core"><b>Z</b><span>ZERO PROTOCOL</span></div><FlowArrowIcon />
@@ -155,7 +160,7 @@ export function Landing() {
 
       <Chapter number="08" kicker="PROOF FLOW & CAPITAL FLOW" className="flows-chapter">
         <div className="chapter-intro"><p>HOW THE SYSTEM CIRCULATES TRUST</p><h2>Evidence travels forward.<br />Accountability travels back.</h2></div>
-        <div className="flow-map"><div className="flow-row proof"><span>PROOF</span>{["Field action","Evidence","Agents","Verifier","Human","Receipt"].map((label,index) => <div key={label}><i>{index + 1}</i><b>{label}</b>{index < 5 && <ArrowRight size={22} />}</div>)}</div><div className="flow-row capital"><span>CAPITAL</span>{["Funder","Escrow","Authorization","Community"].map((label,index) => <div key={label}><i>{index + 1}</i><b>{label}</b>{index < 3 && <ArrowRight size={22} />}</div>)}</div></div>
+        <div className="flow-map-v2">{trustFlows.map(flow => <article className={flow.kind} key={flow.title}><header><span>{flow.title}</span><p>{flow.summary}</p></header><ol>{flow.steps.map((step, index) => <li key={step}><i>{String(index + 1).padStart(2, "0")}</i><b>{step}</b>{index < flow.steps.length - 1 && <ArrowRight size={18} />}</li>)}</ol></article>)}</div>
       </Chapter>
 
       <Chapter number="09" kicker="TRUST MODEL" id="trust" className="trust-chapter">
@@ -167,7 +172,7 @@ export function Landing() {
       <Chapter number="10" kicker="A PROTOCOL MADE CONCRETE" id="example" className="example-chapter">
         <div className="chapter-intro"><p>ONE INSTANCE OF THE GENERAL MODEL</p><h2>La Bocana Flood<br />Early Warning</h2><span>Putumayo, Colombia</span></div>
         <div className="story-strip">{[["BEFORE","Risk identified","/assets/before-flood.png"],["INTERVENTION","Early warning and evacuation","/assets/during-evacuation.png"],["AFTER","Reduced flooding impact","/assets/after-safe.png"]].map(([stage,title,image]) => <figure key={stage}><img src={image} alt={`${stage}: La Bocana prevention program`} /><figcaption><span>{stage}</span><h3>{title}</h3></figcaption></figure>)}</div>
-        <div className="example-proof"><div><p>THE CLAIM</p><h3>This is not what ZERO is.<br />It is one instance of the protocol.</h3><p>Every future program follows the same general model, permission boundaries and audit standard.</p><a href="/app">Open this program in the platform <ArrowRight size={17} /></a></div><Receipt /></div>
+        <div className="example-proof"><div><p>THE CLAIM</p><h3>This is not what ZERO is.<br />It is one instance of the protocol.</h3><p>Every future program follows the same general model, permission boundaries and audit standard.</p><a href="/enter">Open this program in the platform <ArrowRight size={17} /></a></div><Receipt /></div>
       </Chapter>
 
       <Chapter number="11" kicker="UNDER THE HOOD" id="architecture" className="architecture-intro">
@@ -193,7 +198,7 @@ export function Landing() {
 
       <Chapter number="19" kicker="THE FUTURE WE PREVENT" id="future" className="manifesto-chapter">
         <img src="/assets/after-safe.png" alt="Community members after a prevention program" />
-        <div><p>ONE PROTOCOL. MANY CONTEXTS. ALWAYS THE SAME STANDARD.</p><h2>The future will not only be measured by what survived.<br /><em>It will be measured by what we prevented.</em></h2><a href="/app">Enter the platform <ArrowRight size={18} /></a></div>
+        <div><p>ONE PROTOCOL. MANY CONTEXTS. ALWAYS THE SAME STANDARD.</p><h2>The future will not only be measured by what survived.<br /><em>It will be measured by what we prevented.</em></h2><a href="/enter">Enter the platform <ArrowRight size={18} /></a></div>
       </Chapter>
     </main>
     <footer className="landing-footer"><a href="/">ZERO</a><span>Prevention finance. Proven.</span><nav><button onClick={() => go("protocol")}>Protocol</button><button onClick={() => go("trust")}>Trust & safety</button><a href="/app">Platform</a></nav></footer>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {
-  ArrowLeft, ArrowRight, Buildings, CaretDown, Check, CheckCircle, Clock,
+  ArrowLeft, ArrowRight, Buildings, Check, CheckCircle, Clock,
   Database, FileMagnifyingGlass, Fingerprint, FlowArrow, Gauge, Globe,
   HandCoins, List, MapPin, Robot, ShieldCheck, SignOut, SquaresFour,
   UserCircle, UsersThree, Wallet, X,
@@ -40,7 +40,28 @@ const roleWorkspaces = {
 
 function shorten(value) { return value ? `${value.slice(0, 8)}…${value.slice(-6)}` : "—"; }
 
-function Sidebar({ roleKey, setRoleKey, section, setSection, mobileOpen, setMobileOpen }) {
+const demoIdentities = {
+  funder: { email: "maya@globalresilience.fund", passcode: "funder-demo", promise: "Authorize capital only when the receipt, evidence and human signature agree." },
+  operator: { email: "ops@labocana.org", passcode: "operator-demo", promise: "Coordinate field execution and evidence tasks without fund controls." },
+  verifier: { email: "verifier@riverside.review", passcode: "verify-demo", promise: "Challenge claims, inspect provenance and publish verification notes." },
+  beneficiary: { email: "community@labocana.org", passcode: "community-demo", promise: "See what was protected, what was released and why." },
+  auditor: { email: "audit@openclimate.ledger", passcode: "audit-demo", promise: "Reconstruct every claim from evidence to settlement." },
+};
+
+function getInitialRole() {
+  const params = new URLSearchParams(window.location.search);
+  const fromQuery = params.get("role");
+  const fromStorage = window.localStorage?.getItem("zero-demo-role");
+  return roles[fromQuery] ? fromQuery : roles[fromStorage] ? fromStorage : null;
+}
+
+function enterAs(roleKey) {
+  window.localStorage?.setItem("zero-demo-role", roleKey);
+  window.location.href = `/app?role=${roleKey}`;
+}
+
+function Sidebar({ roleKey, section, setSection, mobileOpen, setMobileOpen }) {
+  if (!roleKey) return <RoleGateway />;
   const role = roles[roleKey];
   return <aside className={`product-sidebar ${mobileOpen ? "is-open" : ""}`}>
     <div className="sidebar-brand">ZERO<button onClick={() => setMobileOpen(false)} aria-label="Close menu"><X size={20} /></button></div>
@@ -50,13 +71,10 @@ function Sidebar({ roleKey, setRoleKey, section, setSection, mobileOpen, setMobi
       </button>)}
     </nav>
     <div className="role-panel">
-      <span>VIEWING AS</span>
-      <label><UserCircle size={18} /><select aria-label="View product as role" value={roleKey} onChange={e => { setRoleKey(e.target.value); setSection("portfolio"); }}>
-        {Object.entries(roles).map(([key, value]) => <option key={key} value={key}>{value.label}</option>)}
-      </select><CaretDown size={14} /></label>
+      <span>AUTHENTICATED ROLE</span>
       <div className="role-identity"><i>{role.initials}</i><div><strong>{role.label}</strong><small>{role.org}</small></div></div>
       <p>{role.canApprove ? "Can review and authorize fund movements." : `${role.label} permissions are intentionally restricted.`}</p>
-      <button className="sign-out"><SignOut size={17} /> Demo identity</button>
+      <button className="sign-out" onClick={() => { window.localStorage?.removeItem("zero-demo-role"); window.location.href = "/enter"; }}><SignOut size={17} /> Change demo identity</button>
     </div>
   </aside>;
 }
@@ -154,15 +172,25 @@ function AgentModal({ onClose }) {
 
 function SectionPlaceholder({ section, roleKey, onBack }) { const labels = { programs: "All prevention programs", approvals: "Human approvals", settlements: "Settlement ledger", evidence: "Evidence registry", audit: "Public audit trail" }; const workspace = roleWorkspaces[roleKey]; return <main className="section-placeholder"><p>ZERO · {section.toUpperCase()} · {roles[roleKey].label.toUpperCase()}</p><h1>{labels[section]}</h1><blockquote>{workspace.thesis}</blockquote><div className="placeholder-permissions"><span>{workspace.surface}</span>{workspace.can.map(item => <p key={item}><CheckCircle size={14} weight="fill" />{item}</p>)}</div><button onClick={onBack}>Return to role home <ArrowRight size={18} /></button></main>; }
 
+export function RoleGateway() {
+  const [selected, setSelected] = useState("funder");
+  const identity = demoIdentities[selected];
+  return <main className="gateway-shell">
+    <a className="gateway-back" href="/"><ArrowLeft size={17} /> Back to protocol</a>
+    <section className="gateway-hero"><div><p>ZERO PRODUCT ACCESS</p><h1>Enter as a stakeholder.</h1><blockquote>For the demo, each identity is preconfigured. In production this becomes authenticated access, scoped permissions and organization-level policy.</blockquote></div><aside><span>DEMO LOGIN</span><strong>{identity.email}</strong><small>Passcode: {identity.passcode}</small><button onClick={() => enterAs(selected)}>Continue to {roles[selected].label}<ArrowRight size={17} /></button></aside></section>
+    <section className="gateway-grid" aria-label="Choose stakeholder role">{Object.entries(roles).map(([key, role]) => <button key={key} className={selected === key ? "active" : ""} onClick={() => setSelected(key)}><i>{role.initials}</i><span>{role.label}</span><strong>{role.org}</strong><p>{demoIdentities[key].promise}</p></button>)}</section>
+  </main>;
+}
+
 export function PlatformApp() {
-  const [receipt, setReceipt] = useState(demoReceipt); const [roleKey, setRoleKey] = useState("funder"); const [section, setSection] = useState("portfolio"); const [programOpen, setProgramOpen] = useState(false); const [modal, setModal] = useState(null); const [mobileOpen, setMobileOpen] = useState(false); const [verified, setVerified] = useState(false);
+  const [receipt, setReceipt] = useState(demoReceipt); const [roleKey] = useState(getInitialRole); const [section, setSection] = useState("portfolio"); const [programOpen, setProgramOpen] = useState(false); const [modal, setModal] = useState(null); const [mobileOpen, setMobileOpen] = useState(false); const [verified, setVerified] = useState(false);
   useEffect(() => { let active = true; loadReceipt(demoReceipt.receiptId).then(result => active && setReceipt(result)); return () => { active = false; }; }, []);
   const role = roles[roleKey];
   async function verify() { setVerified(await verifyIntegrity(receipt)); }
-  return <div className="product-shell"><Sidebar {...{ roleKey, setRoleKey, section, setSection, mobileOpen, setMobileOpen }} /><div className="product-content"><div className="mobile-topbar"><button aria-label="Open navigation" onClick={() => setMobileOpen(true)}><List size={22} /></button><strong>ZERO</strong><span>{role.initials}</span></div><div className="integrity-bar"><button onClick={verify}><Fingerprint size={16} />{verified ? "Receipt integrity verified" : receipt.storage === "DYNAMODB" ? "DYNAMODB LIVE" : "DEMO LEDGER"}</button><span><Globe size={15} /> Base Sepolia · Testnet</span></div>{programOpen ? <ProgramWorkspace receipt={receipt} roleKey={roleKey} onBack={() => setProgramOpen(false)} openModal={setModal} /> : section === "portfolio" ? <Portfolio roleKey={roleKey} onOpen={() => setProgramOpen(true)} onReview={() => setModal("approval")} /> : <SectionPlaceholder section={section} roleKey={roleKey} onBack={() => setSection("portfolio")} />}</div>{modal === "agents" ? <AgentModal onClose={() => setModal(null)} /> : modal && <EvidenceModal type={modal} receipt={receipt} onClose={() => setModal(null)} />}</div>;
+  return <div className="product-shell"><Sidebar {...{ roleKey, section, setSection, mobileOpen, setMobileOpen }} /><div className="product-content"><div className="mobile-topbar"><button aria-label="Open navigation" onClick={() => setMobileOpen(true)}><List size={22} /></button><strong>ZERO</strong><span>{role.initials}</span></div><div className="integrity-bar"><button onClick={verify}><Fingerprint size={16} />{verified ? "Receipt integrity verified" : receipt.storage === "DYNAMODB" ? "DYNAMODB LIVE" : "DEMO LEDGER"}</button><span><Globe size={15} /> Base Sepolia · Testnet</span></div>{programOpen ? <ProgramWorkspace receipt={receipt} roleKey={roleKey} onBack={() => setProgramOpen(false)} openModal={setModal} /> : section === "portfolio" ? <Portfolio roleKey={roleKey} onOpen={() => setProgramOpen(true)} onReview={() => setModal("approval")} /> : <SectionPlaceholder section={section} roleKey={roleKey} onBack={() => setSection("portfolio")} />}</div>{modal === "agents" ? <AgentModal onClose={() => setModal(null)} /> : modal && <EvidenceModal type={modal} receipt={receipt} onClose={() => setModal(null)} />}</div>;
 }
 
 export function App() {
   const path = window.location.pathname.replace(/\/+$/, "") || "/";
-  return path === "/app" || path.startsWith("/app/") ? <PlatformApp /> : <Landing />;
+  return path === "/enter" ? <RoleGateway /> : path === "/app" || path.startsWith("/app/") ? <PlatformApp /> : <Landing />;
 }
