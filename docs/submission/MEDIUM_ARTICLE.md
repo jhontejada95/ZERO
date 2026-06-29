@@ -2,6 +2,11 @@
 
 ## How we built ZERO, a prevention-finance protocol that turns verified prevention into a fundable, auditable and payable outcome
 
+> 📷 **COVER IMAGE — INSERT BEFORE PUBLISHING**  
+> Upload the custom 3:2 ZERO Devpost thumbnail.  
+> Caption: **ZERO — Prevention is an outcome.**  
+> Delete this marker after uploading the image.
+
 > This project and this article were created for the purpose of entering the H01 Hackathon. **#H01Hackathon**
 
 Our world knows how to pay after a tragedy. It still does not know how to fund one that never happens.
@@ -17,6 +22,11 @@ That paradox became the starting point for ZERO.
 ZERO is a prevention-finance protocol. It transforms evidence, counterfactual analysis, independent verification, human authorization and blockchain settlement into a new artifact: a **Prevention Receipt**.
 
 The goal is not to reward vague claims that something bad might have happened. The goal is to create a disciplined, reconstructable process through which prevention can become economically legible without pretending uncertainty has disappeared.
+
+> 📷 **IMAGE 1 — INSERT HERE**  
+> File: `docs/final/01-landing-hero.png`  
+> Caption: **ZERO reframes prevention as a verifiable and financeable outcome.**  
+> Delete this marker after uploading the image.
 
 ![ZERO landing page — Prevention is an outcome](../final/01-landing-hero.png)
 
@@ -62,6 +72,11 @@ It links:
 
 This changes the unit of finance. Instead of waiting to price damage after the fact, capital can be conditioned on a verified prevention outcome.
 
+> 📷 **IMAGE 2 — INSERT HERE**  
+> File: `docs/final/02-section-8-proof-capital-flow.png`  
+> Caption: **ZERO separates the proof flow from the capital flow, connecting both through a Prevention Receipt.**  
+> Delete this marker after uploading the image.
+
 ![ZERO proof and capital flow](../final/02-section-8-proof-capital-flow.png)
 
 ## Two coordinated flows
@@ -85,6 +100,11 @@ This separation is fundamental. Evidence production should not control money. Ve
 Our architecture can be summarized in four sentences:
 
 > **Agent proposes. Human authorizes. Contract settles. Auditor reconstructs.**
+
+> 📷 **IMAGE 3 — INSERT HERE**  
+> File: `docs/submission/zero-architecture.png`  
+> Caption: **ZERO’s architecture preserves separation between evidence, human authority, settlement and public audit.**  
+> Delete this marker after uploading the image.
 
 ![ZERO architecture](zero-architecture.png)
 
@@ -137,6 +157,11 @@ The community sees what was promised, what was protected, what evidence supports
 
 The auditor can trace hashes, inspect attestations and reconstruct settlement. The role is intentionally read-only.
 
+> 📷 **IMAGE 4 — INSERT HERE**  
+> File: `docs/final/03-stakeholder-access.png`  
+> Caption: **Every stakeholder enters through a role-scoped identity with explicit permissions.**  
+> Delete this marker after uploading the image.
+
 ![ZERO stakeholder access](../final/03-stakeholder-access.png)
 
 This role separation turned ZERO from a beautiful dashboard into the beginning of an accountable product.
@@ -160,7 +185,17 @@ Coinbase Developer Platform provides the programmable wallet infrastructure. Ver
 
 The blockchain is used for the commitments that benefit from public immutability: contracts, payments, attestations, authorization and settlement. Operational application data remains in the appropriate cloud layer.
 
+> 📷 **IMAGE 5 — INSERT HERE**  
+> File: `docs/final/13-proof-deployed-contracts.png`  
+> Caption: **ZERO token, settlement escrow and approval escrow deployed independently on Base Sepolia.**  
+> Delete this marker after uploading the image.
+
 ![Deployed ZERO contracts](../final/13-proof-deployed-contracts.png)
+
+> 📷 **IMAGE 6 — INSERT HERE**  
+> File: `docs/final/14-proof-onchain-transactions.png`  
+> Caption: **Confirmed x402 payment, EAS attestation, EIP-712 authorization canary and escrow settlement.**  
+> Delete this marker after uploading the image.
 
 ![Confirmed ZERO transactions](../final/14-proof-onchain-transactions.png)
 
@@ -253,6 +288,13 @@ Each domain would require its own evidence standards, verification rules and gov
 
 The roadmap includes privacy-preserving community data, configurable verifier networks, dispute resolution, production stablecoin settlement, institutional identity, richer counterfactual models and real-world pilots.
 
+> 📷 **IMAGE 7 — OPTIONAL INSERT HERE**  
+> File: `docs/final/15-proof-functional-stack.png`  
+> Caption: **One reconstructable execution stack across CDP wallets, x402, DynamoDB, Vercel, EAS and EIP-712.**  
+> Delete this marker after uploading the image, or delete the entire block if you omit this optional image.
+
+![ZERO functional technology stack](../final/15-proof-functional-stack.png)
+
 ## What we learned
 
 Prevention finance is not simply a prediction problem. It is a coordination and accountability problem.
@@ -276,4 +318,3 @@ Our world already has sophisticated systems for measuring loss after tragedy. We
 - Source code: https://github.com/jhontejada95/ZERO
 
 This project and this article were created for the purpose of entering the H01 Hackathon. **#H01Hackathon #AI #Blockchain #ClimateTech #FinTech #PublicGoods**
-
