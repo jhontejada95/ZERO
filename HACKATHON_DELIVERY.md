@@ -102,6 +102,10 @@ ZERO is infrastructure for insurers, resilience funds, governments and humanitar
 - Mention Base Sepolia out loud.
 - End with the manifesto line.
 
+## Final recording script
+
+The definitive sub-three-minute script, exact screen choreography, prepared-tab order and editing rules are in `docs/submission/VIDEO_DEMO_SCRIPT_FINAL.md`. This version supersedes earlier draft scripts for the final submission recording.
+
 ## What is real today
 
 - Public Vercel deployment.
