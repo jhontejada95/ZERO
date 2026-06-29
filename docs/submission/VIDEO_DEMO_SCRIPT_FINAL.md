@@ -154,10 +154,33 @@ Hold the final frame for one second, then cut to black.
 - Add English captions; many judges watch without sound.
 - Do not accelerate the voice. Shorten pauses first if the recording exceeds three minutes.
 
+## Kinetic captions preset
+
+Use CapCut Desktop auto captions with English speech recognition, then apply the style to all captions:
+
+- Format: word-by-word highlight or short phrase blocks.
+- Typeface: Inter, DM Sans or a similar bold neutral sans-serif.
+- Base text: warm white `#EFEEE8`.
+- Active keyword: ZERO amber `#D69B35`; use cyan `#69C6E8` only for evidence or technology terms.
+- Size: 52–60 px on camera; 34–42 px during the product demo.
+- Maximum: 3–6 words per block and two lines.
+- Position: centered around the lower third, at least 10% above the bottom edge. Move captions away from UI controls when necessary.
+- Background: black at 70–80% opacity, subtle rounded corners or a soft shadow.
+- Entrance: 0.10–0.18 second pop or fade. No looping bounce, rotation or exaggerated zoom.
+- Correct the automatic transcript manually, especially `UNDRR`, `counterfactual`, `DynamoDB`, `x402`, `EIP-712`, `EAS` and `Base Sepolia`.
+
+Use full-screen kinetic text only for these four beats:
+
+1. `THE WORLD PAYS AFTER TRAGEDY.`
+2. `$2.3 TRILLION / EVERY YEAR`
+3. `97% RESPONSE / <3% PREVENTION`
+4. `PREVENTION IS AN OUTCOME.`
+
+During the application demo, captions should support the interface rather than compete with it. Highlight only one meaningful word per block: `EVIDENCE`, `HUMAN`, `VERIFIED`, `SETTLED`, or `AUDITABLE`.
+
 ## Recommended recording assets
 
 - Architecture: `docs/submission/zero-architecture.png`
 - AWS proof: `docs/submission/aws-dynamodb-proof.png`
 - Optional B-roll: `docs/final/14-proof-onchain-transactions.png`
 - Final URL card: `https://zero-plum-eta.vercel.app`
-
