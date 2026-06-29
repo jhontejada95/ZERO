@@ -34,7 +34,7 @@ Amazon DynamoDB
 ## Required uploads
 
 - Architecture diagram: `zero-architecture.png`
-- AWS database proof: take a screenshot of AWS Console → DynamoDB → Tables → `zero-events` in `us-east-2`, showing the table name, region and Active status. Do not expose credentials.
+- AWS database proof: `aws-dynamodb-proof.png`. It shows table `zero-events` in `us-east-2`, Active status, PK/SK schema, on-demand capacity and 28 persisted items.
 
 ## Optional bonus-content field
 
