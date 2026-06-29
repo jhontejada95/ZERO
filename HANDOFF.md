@@ -412,3 +412,4 @@ Next deployment task:
 - 2026-06-28: Wrote the full English Medium launch article (`docs/submission/MEDIUM_ARTICLE.md`) and a 15-post X/Twitter thread (`docs/submission/X_THREAD.md`). Both include the required H01 disclosure and `#H01Hackathon`; replace `[MEDIUM_LINK]` in the thread after publishing.
 - 2026-06-28: Added `docs/submission/MEDIUM_PUBLISHING_GUIDE.md` with exact image placement, file paths, captions, alt text, cover guidance and the recommended maximum number of images.
 - 2026-06-28: Inserted visible cover and image markers directly into `MEDIUM_ARTICLE.md`, including exact local file paths, captions and deletion instructions for the Medium publishing workflow.
+- 2026-06-28: Published Medium article URL was inserted into `X_THREAD.md`. Added contextual official mentions for `@vercel`, `@AWSCloud`, `@Devpost`, `@CoinbaseDev`, `@base`, and `@eas_eth`; tags are distributed by contribution rather than repeated indiscriminately.

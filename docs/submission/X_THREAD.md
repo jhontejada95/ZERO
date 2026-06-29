@@ -1,16 +1,14 @@
 # ZERO — X/Twitter launch thread
 
-Replace `[MEDIUM_LINK]` after publishing the Medium article.
+Medium article: `https://medium.com/@jhontejada95/financing-the-disaster-that-never-happened-21fe8b89175d`
 
 ## 1/15
 
-Our world knows how to pay after a tragedy.
-
-It still does not know how to fund one that never happens.
+Our world knows how to pay after tragedy—but not how to fund one that never happens.
 
 We built ZERO to change that. 🧵
 
-This project and thread were created for the purpose of entering the H01 Hackathon. #H01Hackathon
+This project and thread were created for entering the H01 Hackathon by @vercel + @AWSCloud on @Devpost. #H01Hackathon
 
 ## 2/15
 
@@ -70,15 +68,17 @@ The functional MVP runs on Base Sepolia with:
 • EIP-712 human authorization
 • Confirmed testnet settlement
 
+Built on @base with attestations from @eas_eth.
+
 ## 9/15
 
-We also used x402 for machine-payable evidence.
+We also used x402 from @CoinbaseDev for machine-payable evidence.
 
 An agent-controlled wallet pays a data provider in Base Sepolia USDC before the evidence resource is returned—creating a verifiable economic trail for evidence acquisition.
 
 ## 10/15
 
-The full stack combines:
+The full stack combines infrastructure from @CoinbaseDev, @AWSCloud and @vercel:
 
 • Coinbase Developer Platform wallets
 • x402
@@ -127,10 +127,9 @@ Prevention is not the absence of an outcome.
 
 Prevention is an outcome.
 
-Read how we built ZERO: [MEDIUM_LINK]
+Read how we built ZERO:
+https://medium.com/@jhontejada95/financing-the-disaster-that-never-happened-21fe8b89175d
 
-Live: https://zero-plum-eta.vercel.app
-Code: https://github.com/jhontejada95/ZERO
+Built for @vercel + @AWSCloud on @Devpost.
 
-#H01Hackathon #AI #Blockchain #ClimateTech #FinTech #PublicGoods
-
+#H01Hackathon #ClimateTech #FinTech
