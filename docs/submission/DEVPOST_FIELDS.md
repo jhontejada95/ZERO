@@ -38,7 +38,7 @@ Amazon DynamoDB
 
 ## Optional bonus-content field
 
-Leave blank unless a public post or video was created specifically for this hackathon. The public content must explicitly say: **This project and content were created for the H01 Hackathon. #H01Hackathon** Then paste the public post URL into the field.
+Leave blank unless a public post or video was created specifically for this hackathon. The public content must explicitly say: **This project and content were created for the H0 Hackathon. #H0Hackathon** Then paste the public post URL into the field.
 
 ## Additional judge file
 

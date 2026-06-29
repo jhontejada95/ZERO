@@ -51,9 +51,9 @@ https://medium.com/@jhontejada95/financing-the-disaster-that-never-happened-21fe
 
 Live protocol: https://zero-plum-eta.vercel.app
 
-This project and this content were created for the purpose of entering the H01 Hackathon by @Vercel and @Amazon Web Services on @Devpost.
+This project and this content were created for the purpose of entering the H0 Hackathon by @Vercel and @Amazon Web Services on @Devpost.
 
-#H01Hackathon #ClimateTech #FinTech #ArtificialIntelligence #Blockchain #DisasterRiskReduction #ClimateAdaptation #PublicGoods
+#H0Hackathon #ClimateTech #FinTech #ArtificialIntelligence #Blockchain #DisasterRiskReduction #ClimateAdaptation #PublicGoods
 
 ## Recommended media
 

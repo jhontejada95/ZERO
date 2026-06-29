@@ -10,7 +10,7 @@ The world knows how to pay after tragedy. It still struggles to finance one that
 
 ZERO was built to change that. 🧵
 
-This project and thread were created for entering the H01 Hackathon by @vercel + @AWSCloud on @Devpost. #H01Hackathon
+This project and thread were created for entering the H0 Hackathon by @vercel + @AWSCloud on @Devpost. #H0Hackathon
 
 ## 2/15
 
@@ -134,4 +134,4 @@ Prevention is an outcome.
 Full argument and technical proof:
 https://medium.com/@jhontejada95/financing-the-disaster-that-never-happened-21fe8b89175d
 
-#H01Hackathon #ClimateTech #FinTech
+#H0Hackathon #ClimateTech #FinTech

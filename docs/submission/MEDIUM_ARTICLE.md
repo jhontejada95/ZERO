@@ -7,7 +7,7 @@
 > Caption: **ZERO — Prevention is an outcome.**  
 > Delete this marker after uploading the image.
 
-> This project and this article were created for the purpose of entering the H01 Hackathon. **#H01Hackathon**
+> This project and this article were created for the purpose of entering the H0 Hackathon. **#H0Hackathon**
 
 Our world knows how to pay after a tragedy. It still does not know how to fund one that never happens.
 
@@ -317,4 +317,4 @@ Our world already has sophisticated systems for measuring loss after tragedy. We
 - Stakeholder access: https://zero-plum-eta.vercel.app/enter
 - Source code: https://github.com/jhontejada95/ZERO
 
-This project and this article were created for the purpose of entering the H01 Hackathon. **#H01Hackathon #AI #Blockchain #ClimateTech #FinTech #PublicGoods**
+This project and this article were created for the purpose of entering the H0 Hackathon. **#H0Hackathon #AI #Blockchain #ClimateTech #FinTech #PublicGoods**
