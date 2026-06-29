@@ -1,135 +1,137 @@
-# ZERO — X/Twitter launch thread
+# ZERO — Evidence-backed X/Twitter launch thread
 
 Medium article: `https://medium.com/@jhontejada95/financing-the-disaster-that-never-happened-21fe8b89175d`
 
+Every post is written in the third person. URLs are counted by X as shortened links.
+
 ## 1/15
 
-Our world knows how to pay after tragedy—but not how to fund one that never happens.
+The world knows how to pay after tragedy. It still struggles to finance one that never happens.
 
-We built ZERO to change that. 🧵
+ZERO was built to change that. 🧵
 
 This project and thread were created for entering the H01 Hackathon by @vercel + @AWSCloud on @Devpost. #H01Hackathon
 
 ## 2/15
 
-When prevention works, there is no destroyed home, overflowing hospital or public catastrophe.
+UNDRR’s GAR 2025 estimates disasters cost over $2.3T yearly when cascading and ecosystem impacts are included—roughly 2% of global GDP.
 
-Its greatest success—that nothing happened—is also what makes its value difficult to prove.
+This is not a marginal problem. It is systemic financial risk.
+
+@UNDRR
+https://www.undrr.org/gar/gar2025
 
 ## 3/15
 
-ZERO is a prevention-finance protocol.
+The financing is backwards.
 
-It turns evidence, counterfactual analysis, independent verification and human authorization into a fundable, auditable and payable outcome.
+UNDRR reports that 97% of humanitarian aid went to response, reconstruction and relief, while under 3% funded prevention and preparedness.
+
+Capital arrives after preventable harm becomes visible.
+
+https://www.undrr.org/implementing-sendai-framework/drr-focus-areas/financing-prevention
 
 ## 4/15
 
-The core primitive is a Prevention Receipt.
+Prevention already has measurable returns.
 
-It connects what was promised, what was observed, what was likely prevented, how confident we are, who approved it and exactly how value moved.
+@WMO reports that $1 invested in multi-hazard early warning systems can generate $9 in net benefits. Just 24 hours of warning can reduce potential damage by 30%.
+
+https://public.wmo.int/site/science-action/weather-forecasts-and-early-warnings
 
 ## 5/15
 
-ZERO does not claim AI can know the future.
+The same pattern appears in infrastructure.
 
-Agents retrieve and organize evidence, evaluate conditions and prepare decisions—but they cannot unilaterally release capital.
+@WorldBank estimates resilient infrastructure can produce $4 in benefit per $1 invested, with $4.2T in potential net benefits across low- and middle-income countries.
+
+https://www.worldbank.org/en/news/press-release/2019/06/19/42-trillion-can-be-saved-by-investing-in-more-resilient-infrastructure-new-world-bank-report-finds
 
 ## 6/15
 
-Our architecture is deliberately simple:
+Yet the capital gap remains enormous.
 
-Agent proposes.
-Human authorizes.
-Contract settles.
-Auditor reconstructs.
+@UNEP’s 2025 report estimates developing countries will need $310–365B annually for adaptation by 2035. International public flows were only $26B: a 12–14× gap.
 
-Every responsibility has a boundary.
+https://www.unep.org/resources/adaptation-gap-report-2025
 
 ## 7/15
 
-We built five separate stakeholder experiences:
+These figures expose a market failure:
 
-• Fund Manager
-• Program Operator
-• Independent Verifier
-• Community Representative
-• Public Auditor
-
-Each sees only the data and actions relevant to its role.
+Prevention can create measurable economic value, but avoided harm is difficult to verify, govern and settle. When no disaster occurs, the successful outcome often disappears from financial systems.
 
 ## 8/15
 
-The functional MVP runs on Base Sepolia with:
+ZERO addresses that gap with a Prevention Receipt.
+
+It connects the intervention, observed outcome, counterfactual estimate, confidence, evidence lineage, independent verification, human authorization and final settlement.
+
+Uncertainty remains visible.
+
+## 9/15
+
+ZERO does not treat AI as an oracle.
+
+Agents can retrieve evidence, evaluate conditions and prepare decisions. They cannot release capital unilaterally.
+
+The governing rule is:
+Agent proposes. Human authorizes. Contract settles. Auditor reconstructs.
+
+## 10/15
+
+That separation also exists in the product.
+
+Fund managers, operators, independent verifiers, community representatives and public auditors receive different permissions.
+
+No actor can create evidence, approve it, move money and audit itself.
+
+## 11/15
+
+The functional MVP uses programmable wallets and x402 from @CoinbaseDev, operational persistence in @AWSCloud DynamoDB, and a public product plus serverless API deployed through @vercel.
+
+The technology supports the accountability model; it is not decoration.
+
+## 12/15
+
+The public settlement layer runs on @base Sepolia:
 
 • ZERO ERC-20
 • Settlement escrow
 • Approval escrow
-• EAS attestation
+• x402 USDC payment
+• @eas_eth attestation
 • EIP-712 human authorization
-• Confirmed testnet settlement
+• Confirmed settlement
 
-Built on @base with attestations from @eas_eth.
+Each critical handoff leaves a transaction.
 
-## 9/15
+## 13/15
 
-We also used x402 from @CoinbaseDev for machine-payable evidence.
-
-An agent-controlled wallet pays a data provider in Base Sepolia USDC before the evidence resource is returned—creating a verifiable economic trail for evidence acquisition.
-
-## 10/15
-
-The full stack combines infrastructure from @CoinbaseDev, @AWSCloud and @vercel:
-
-• Coinbase Developer Platform wallets
-• x402
-• AWS DynamoDB
-• Vercel
-• EAS + EIP-712
-• Solidity contracts
-• Base Sepolia
-
-Technology is used as infrastructure, not decoration.
-
-## 11/15
-
-Our La Bocana reference scenario demonstrates the complete chain:
+The La Bocana reference scenario demonstrates the complete testnet chain:
 
 37 people protected.
 127 evidence points.
 94% confidence.
 2.4M ZERO released.
 
-It is a transparent testnet scenario—not a fabricated claim of real-world deployment.
-
-## 12/15
-
-ZERO can serve insurers, resilience funds, development banks, governments, humanitarian organizations and companies financing measurable risk reduction.
-
-The business model combines settlement fees, enterprise software and verification infrastructure.
-
-## 13/15
-
-Possible applications extend from flood and wildfire resilience to disease containment, infrastructure maintenance, cybersecurity and supply-chain prevention.
-
-Different domains, one shared need: accountable proof before capital moves.
+It is explicitly a reference scenario—not a fabricated claim of real-world deployment.
 
 ## 14/15
 
-The biggest lesson:
+ZERO’s commercial thesis is B2B infrastructure for insurers, resilience funds, development banks, governments and humanitarian finance.
 
-Prevention finance is not just a prediction problem. It is a coordination, governance and accountability problem.
-
-Uncertainty should not be hidden. It should become part of the receipt.
+Potential revenue combines settlement fees, enterprise software, verification services and risk-data infrastructure.
 
 ## 15/15
 
-Prevention is not the absence of an outcome.
+The evidence says prevention pays. The financing system still struggles to recognize it.
+
+ZERO proposes a way to make prevented harm visible and payable.
 
 Prevention is an outcome.
 
-Read how we built ZERO:
+Full argument and technical proof:
 https://medium.com/@jhontejada95/financing-the-disaster-that-never-happened-21fe8b89175d
-
-Built for @vercel + @AWSCloud on @Devpost.
 
 #H01Hackathon #ClimateTech #FinTech
