@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ZERO Technology Proof Pack</title>
+  <style>
+    *{box-sizing:border-box}html,body{margin:0;background:#070808;color:#efeee8;font-family:Arial,sans-serif}.board{width:1200px;height:800px;padding:42px 48px;background:#070808;overflow:hidden}.meta{display:flex;justify-content:space-between;align-items:center;color:#69c6e8;font:12px monospace;letter-spacing:.13em}.meta b{color:#efeee8;font:700 22px Arial;letter-spacing:-.06em}.board h1{margin:22px 0 5px;font:48px Georgia,serif;letter-spacing:-.04em}.lead{margin:0 0 25px;color:#92948f;font:italic 18px Georgia,serif}.contract-list{display:grid;gap:12px}.contract{height:175px;display:grid;grid-template-columns:275px 1fr;gap:18px;padding:13px;border:1px solid #303433;background:#0b0d0d}.contract img{width:100%;height:147px;object-fit:cover;object-position:top}.contract small,.proof small{display:block;color:#69c6e8;font:10px monospace;letter-spacing:.1em}.contract h2{margin:11px 0 8px;font:25px Georgia,serif}.contract code{font:12px monospace;color:#c7c8c4}.contract p{margin:12px 0 0;color:#8b8d89;font-size:13px}.proof-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.proof{height:265px;padding:12px;border:1px solid #303433;background:#0b0d0d}.proof img{width:100%;height:165px;object-fit:cover;object-position:top}.proof footer{display:flex;justify-content:space-between;align-items:end;padding-top:11px}.proof h2{margin:5px 0 0;font:21px Georgia,serif}.proof strong{color:#53c79a;font:11px monospace}.infra{display:grid;grid-template-columns:1.35fr .65fr;gap:18px}.infra>article{border:1px solid #303433;background:#0b0d0d;padding:13px}.infra img{width:100%;height:460px;object-fit:cover;object-position:top}.stack{display:grid;gap:9px}.stack div{padding:15px;border:1px solid #303433}.stack span{display:block;color:#69c6e8;font:10px monospace;letter-spacing:.09em}.stack strong{display:block;margin-top:6px;font-size:15px}.stack small{display:block;margin-top:5px;color:#858783;line-height:1.35}.infra-note{margin-top:15px;color:#d69b35;font:12px monospace}.footer{margin-top:19px;display:flex;justify-content:space-between;color:#686b67;font:10px monospace}.footer b{color:#efeee8}.amber{color:#d69b35!important}
+  </style>
+</head>
+<body>
+  <section class="board" id="contracts">
+    <div class="meta"><b>ZERO</b><span>TECHNOLOGY PROOF 01 / 03 · BASE SEPOLIA</span></div>
+    <h1>Deployed contract boundary.</h1>
+    <p class="lead">The token, settlement rail and human-approval rail exist as independent onchain contracts.</p>
+    <div class="contract-list">
+      <article class="contract"><img src="13-zero-token-contract.png"><div><small>ERC-20 · ZERO TEST TOKEN</small><h2>Programmable prevention value</h2><code>0xe5546454f7Be4796d2CF65d5F0399501Dca21aab</code><p>Project-denominated testnet value used to represent prevention settlement amounts.</p></div></article>
+      <article class="contract"><img src="14-settlement-escrow-contract.png"><div><small>SMART CONTRACT · SETTLEMENT ESCROW</small><h2>Conditional capital release</h2><code>0x7f6510C4cD6Edc5F59F49ccD5792258e13Bad3D6</code><p>Releases value only against the expected receipt and settlement conditions.</p></div></article>
+      <article class="contract"><img src="15-approval-escrow-contract.png"><div><small>SMART CONTRACT · APPROVAL ESCROW</small><h2>Human authorization boundary</h2><code>0x4E719831f1e81730499B5E7e8a1f4B8A6E865d2E</code><p>Separates agent proposals from the authority required to move capital.</p></div></article>
+    </div>
+    <div class="footer"><b>Agent proposes. Human authorizes. Contract settles.</b><span>Publicly inspectable on BaseScan</span></div>
+  </section>
+
+  <section class="board" id="transactions">
+    <div class="meta"><b>ZERO</b><span>TECHNOLOGY PROOF 02 / 03 · CONFIRMED TRANSACTIONS</span></div>
+    <h1>Every critical handoff leaves proof.</h1>
+    <p class="lead">Payment, attestation, authorization and settlement are confirmed—not simulated—in the testnet ledger.</p>
+    <div class="proof-grid">
+      <article class="proof"><img src="16-x402-usdc-payment.png"><footer><div><small>X402 · BASE SEPOLIA USDC</small><h2>Paid evidence acquisition</h2></div><strong>SUCCESS</strong></footer></article>
+      <article class="proof"><img src="17-eas-attestation.png"><footer><div><small>ETHEREUM ATTESTATION SERVICE</small><h2>Receipt attestation</h2></div><strong>SUCCESS</strong></footer></article>
+      <article class="proof"><img src="19-eip712-canary.png"><footer><div><small>EIP-712 · REPLAY-PROTECTED</small><h2>Human approval canary</h2></div><strong>SUCCESS</strong></footer></article>
+      <article class="proof"><img src="18-escrow-settlement.png"><footer><div><small>ZERO SETTLEMENT ESCROW</small><h2>Prevention value released</h2></div><strong>SUCCESS</strong></footer></article>
+    </div>
+    <div class="footer"><b>Evidence → Attestation → Human authorization → Settlement</b><span>All hashes linked in the public audit trail</span></div>
+  </section>
+
+  <section class="board" id="infrastructure">
+    <div class="meta"><b>ZERO</b><span>TECHNOLOGY PROOF 03 / 03 · FUNCTIONAL STACK</span></div>
+    <h1>One reconstructable execution stack.</h1>
+    <p class="lead">The live auditor surface connects operational storage, agent infrastructure and public onchain proof.</p>
+    <div class="infra">
+      <article><img src="21-cloud-audit-surface.png"><p class="infra-note">Live product surface · DYNAMODB LIVE · Base Sepolia Testnet</p></article>
+      <aside class="stack">
+        <div><span>COINBASE DEVELOPER PLATFORM</span><strong>Programmable agent wallets</strong><small>Backend-controlled testnet wallets for automated workflows.</small></div>
+        <div><span>X402</span><strong>Machine-payable evidence</strong><small>USDC payment precedes delivery of the evidence resource.</small></div>
+        <div><span>AWS DYNAMODB</span><strong>Operational event persistence</strong><small>Receipt state and agent events remain reconstructable.</small></div>
+        <div><span>VERCEL</span><strong>Production UI + serverless API</strong><small>Public platform and confirmed agent-proof endpoint.</small></div>
+        <div><span>EAS + EIP-712</span><strong>Attestation + human authority</strong><small>Verifiable claims without surrendering the final decision to agents.</small></div>
+      </aside>
+    </div>
+    <div class="footer"><b>Auditor reconstructs.</b><span class="amber">No critical settlement step is hidden offchain.</span></div>
+  </section>
+</body>
+</html>

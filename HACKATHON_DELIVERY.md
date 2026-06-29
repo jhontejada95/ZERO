@@ -146,3 +146,8 @@ ZERO is novel because it changes the unit of finance: from damage after the fact
 10. `10-role-independent-verifier.png` — Independent verifiers challenge evidence and confidence before an outcome becomes payable.
 11. `11-role-community-representative.png` — Communities see what was promised, what was protected, the supporting proof and the value released.
 12. `12-role-public-auditor.png` — Public auditors trace immutable proof and reconstruct settlement without execution privileges.
+13. `13-proof-deployed-contracts.png` — ZERO token, settlement escrow and human-approval escrow deployed independently on Base Sepolia.
+14. `14-proof-onchain-transactions.png` — Confirmed x402 payment, EAS attestation, EIP-712 authorization and escrow settlement transactions.
+15. `15-proof-functional-stack.png` — CDP wallets, x402, DynamoDB, Vercel, EAS and EIP-712 converge in one reconstructable execution stack.
+
+The three technology-proof boards fill Devpost's remaining gallery slots. Their source captures and reproducible layout are in `docs/final/technology/`.
