@@ -131,3 +131,18 @@ ZERO is infrastructure for insurers, resilience funds, governments and humanitar
 ## Judge framing
 
 ZERO is novel because it changes the unit of finance: from damage after the fact to verified prevention before tragedy. The product is not merely a dashboard; it is a protocol for evidence, authorization, settlement and auditability.
+
+## Devpost image captions
+
+1. `01-landing-hero.png` — ZERO turns verified prevention into a fundable, auditable and payable outcome.
+2. `02-section-8-proof-capital-flow.png` — Evidence becomes a Prevention Receipt while committed capital moves through verification to onchain settlement.
+3. `03-stakeholder-access.png` — Five role-scoped identities separate execution, verification, community oversight, funding and public audit.
+4. `04-app-funder-home.png` — The fund manager monitors prevention programs, evidence integrity, reserved capital and pending authorizations.
+5. `05-approvals-onchain.png` — EIP-712 binds human approval to the exact receipt, beneficiary, amount and settlement conditions.
+6. `06-evidence-x402.png` — x402 enables agents to purchase verified evidence before it enters the prevention assessment.
+7. `07-audit-trail.png` — Auditors reconstruct every receipt through evidence, attestations, signatures, contracts and transactions.
+8. `08-role-fund-manager.png` — Fund managers can authorize releases, but cannot alter evidence, verification scores or contract rules.
+9. `09-role-program-operator.png` — Program operators coordinate milestones and field evidence without access to capital-release controls.
+10. `10-role-independent-verifier.png` — Independent verifiers challenge evidence and confidence before an outcome becomes payable.
+11. `11-role-community-representative.png` — Communities see what was promised, what was protected, the supporting proof and the value released.
+12. `12-role-public-auditor.png` — Public auditors trace immutable proof and reconstruct settlement without execution privileges.
